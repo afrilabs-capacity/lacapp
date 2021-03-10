@@ -20,14 +20,14 @@ const ToastMe=({showToast,context})=>{
             <CToaster>
             
                   <CToast
-                    style={{background:toastType=="success" ? "green": "pink",color:toastType=="success" ? "white": "wine"}}
+                    style={{background:toastType==="success" ? "green": "pink",color:toastType==="success" ? "white": "wine"}}
                     show={showToast}
                     autohide={5000}
                     fade={true}
                     className="success"
                   >
                     <CToastHeader >
-                      {toastType=="success" ? "Success": "Error"}
+                      {toastType==="success" ? "Success": "Error"}
                     </CToastHeader>
                     <CToastBody>
                         <ul>

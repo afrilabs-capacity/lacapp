@@ -1,30 +1,16 @@
-import React, {useEffect,useContext,useState, lazy } from 'react'
+import React, {useEffect,useContext} from 'react'
 import {
-  CBadge,
   CButton,
-  CButtonGroup,
   CCard,
   CCardBody,
-  CCardFooter,
   CCardHeader,
   CCol,
-  CProgress,
-  CRow,
-  CCallout,
-  CInputGroup,
-  CInputGroupPrepend,
-  CInputGroupText,
-  CInput
+  CRow
 } from '@coreui/react'
-import CIcon from '@coreui/icons-react'
-import EditorJs from 'react-editor-js';
 
 
-import MainChartExample from '../charts/MainChartExample.js'
-import Paragraph from '../../api-classes/Paragraph'
 import RichText from '../../editor/RichText'
 import ImageUpload from '../../Uploaders/image-uploader'
-import PgCatProvider from "../../context/PgCatContext"
 import ArticleProvider from "../../context/ArticleContext"
 import TitleInput from "../../inputs/title-input"
 import ArticleStatus from "../../inputs/article-status"
@@ -35,8 +21,8 @@ import {useParams,useLocation} from 'react-router-dom'
 import LoginModal from '../../modals/login-modal'
 
 
-const WidgetsDropdown = lazy(() => import('../widgets/WidgetsDropdown.js'))
-const WidgetsBrand = lazy(() => import('../widgets/WidgetsBrand.js'))
+// const WidgetsDropdown = lazy(() => import('../widgets/WidgetsDropdown.js'))
+// const WidgetsBrand = lazy(() => import('../widgets/WidgetsBrand.js'))
 
 
 const Styles={
@@ -64,7 +50,7 @@ const DashboardUpdatePost = props=> {
 
   const {id} =useParams()
   const location =useLocation()
-  const {fetchArticleByIdApi,resetEditArticle,resetArticle,setEditMode,setArticle,setCurrentArticle,editMode,selectedImageEn,selectedImageFr,validateArticle,toast,modal,setModal,setToast,article,updateArticle,apiAction}=useContext(ArticleProvider.Context)
+  const {fetchArticleByIdApi,resetEditArticle,resetArticle,setEditMode,setArticle,setCurrentArticle,editMode,selectedImageEn,selectedImageFr,validateArticle,toast,modal,article,apiAction}=useContext(ArticleProvider.Context)
  
  useEffect(()=>{
 
@@ -82,8 +68,6 @@ const DashboardUpdatePost = props=> {
     }else{
         fetchArticleByIdApi(id)
     }
-    
-
       //console.log("location state data",location.state.data)
     }else{
       setEditMode("new")

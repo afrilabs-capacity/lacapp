@@ -1,35 +1,28 @@
-import React, { createContext, useState,useEffect } from "react";
-import PropTypes from "prop-types";
+import React, { createContext, useState } from "react";
 
 const Context = createContext({});
 
- const Provider = ({children}) => {
+const Provider = ({ children }) => {
+  // Use State to keep the values
+  const [uploadProgress, setUploadProgress] = useState(0);
 
-// Use State to keep the values
-const [uploadProgress,setUploadProgress] = useState(0);
-
-//useEffect(()=>{console.log("article ii",article)},[article])
-const galleryContext = {
+  //useEffect(()=>{console.log("article ii",article)},[article])
+  const galleryContext = {
     uploadProgress,
-    setUploadProgress
+    setUploadProgress,
   };
 
   // pass the value in provider and return
   return <Context.Provider value={galleryContext}>{children}</Context.Provider>;
 };
 
-
-
-const GalleryProvider= {
-    Provider,
-    Context
+const GalleryProvider = {
+  Provider,
+  Context,
 };
 
 // Provider.propTypes = {
-//     article:PropTypes.object,  
+//     article:PropTypes.object,
 // };
 
-
-
-
-export default GalleryProvider
+export default GalleryProvider;

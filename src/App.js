@@ -12,6 +12,7 @@ import "./App.css";
 import AuthService from "./services/auth.service";
 import PgCatProvider from "./context/PgCatContext"
 import ArticleProvider from "./context/ArticleContext"
+import MreportProvider from "./context/MreportContext"
 import ProgrammeProvider from "./context/ProgrammeContext"
 import AttendeeProvider from "./context/AttendeeContext"
 import UserProvider from "./context/UserContext"
@@ -86,6 +87,7 @@ function App() {
             
             <PgCatProvider.Provider>
             <ArticleProvider.Provider>
+            <MreportProvider.Provider>
             <ProgrammeProvider.Provider>
             <AttendeeProvider.Provider>
             <UserProvider.Provider>
@@ -97,6 +99,7 @@ function App() {
             </UserProvider.Provider>
             </AttendeeProvider.Provider>
             </ProgrammeProvider.Provider>
+            </MreportProvider.Provider>
             </ArticleProvider.Provider>
             </PgCatProvider.Provider>
             

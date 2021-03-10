@@ -20,7 +20,7 @@ function Input(props) {
           <div>
           <Field  id={name} name={name} {...rest} >
               { ({field,form})=>{
-                  console.log('formik errors',form.errors)
+                  //console.log('formik errors',form.errors)
                   return <div className="mb-3">
                    <CInputGroup className={""}>
                       <CInputGroupPrepend>

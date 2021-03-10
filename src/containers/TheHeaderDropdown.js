@@ -1,15 +1,13 @@
 import React from "react";
 import {
-  CBadge,
   CDropdown,
   CDropdownItem,
   CDropdownMenu,
   CDropdownToggle,
   CImg,
 } from "@coreui/react";
-import CIcon from "@coreui/icons-react";
 import AuthService from "../services/auth.service";
-import { Redirect,useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPowerOff} from "@fortawesome/free-solid-svg-icons";
 

@@ -35,6 +35,12 @@ const DashboardAttendeesUser = React.lazy(() => import('./views/dashboard/Dashbo
 const DashboardAddUser = React.lazy(() => import('./views/dashboard/DashboardAddUser'));
 const DashboardUserSetting = React.lazy(() => import('./views/dashboard/DashboardUserSetting'));
 
+
+
+/*lAC ROUTES*/
+const DashboardAddReport = React.lazy(() => import('./views/dashboard/DashboardAddReport'));
+
+
 const CoreUIIcons = React.lazy(() => import('./views/icons/coreui-icons/CoreUIIcons'));
 const Flags = React.lazy(() => import('./views/icons/flags/Flags'));
 const Brands = React.lazy(() => import('./views/icons/brands/Brands'));
@@ -49,7 +55,8 @@ const User = React.lazy(() => import('./views/users/User'));
 
 const routes = [
   { path: '/', exact: true, name: 'Home' },
-  { path: '/dashboard', name: 'Dashboard', component: DashboardAllPost },
+  //{ path: '/dashboard', name: 'Dashboard', component: DashboardAllPost },
+  { path: '/dashboard', name: 'Dashboard', component: Dashboard },
   { path: '/theme', name: 'Theme', component: Colors, exact: true },
   { path: '/theme/colors', name: 'Colors', component: Colors },
   { path: '/theme/typography', name: 'Typography', component: Typography },
@@ -97,7 +104,11 @@ const routes = [
   { path: '/programmes/attendees/:id', exact: true, name: 'Attendees', component:DashboardAttendees },
   { path: '/programmes/attendees/user/:id', exact: true, name: 'User', component:DashboardAttendeesUser},
 
-  { path: '/user/setting', exact: true, name: 'User', component:DashboardUserSetting}
+  { path: '/user/setting', exact: true, name: 'User', component:DashboardUserSetting},
+
+
+  /*LAC ROUTES*/
+  { path: '/report/add', exact: true, name: 'User', component:DashboardAddReport}
 
 ];
 

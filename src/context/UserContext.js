@@ -52,8 +52,6 @@ const initialLoginAction={func:null,params:null}
   const [toastType,setToastType]=useState("error")
   const [loginAction,setLoginAction] =useState(initialLoginAction)
   const [apiAction,setApiAction] =useState(false)
-
-
   // const [featuredFor,setFeaturedFor]=useState("")
   useEffect(()=>{
     //alert.show(modal)

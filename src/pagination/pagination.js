@@ -1,8 +1,5 @@
-import React, { useState,useContext,useEffect } from 'react'
+import React, { useContext,useEffect } from 'react'
 import {
-  CCard,
-  CCardBody,
-  CCardHeader,
   CPagination
 } from '@coreui/react'
 // import ArticleProvider from "../context/ArticleContext"
@@ -25,7 +22,7 @@ useEffect(()=>{
             size="lg"
             addListClass="some-class"
             activePage={currentPage}
-            pages={pagesToRender==0 ? 1 : pagesToRender}
+            pages={pagesToRender===0 ? 1 : pagesToRender}
             onActivePageChange={(page)=>goToPageApi(page)}
           />
           <br></br>

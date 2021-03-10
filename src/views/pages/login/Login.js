@@ -1,42 +1,33 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
 
 import {
-  CButton,
   CCard,
   CCardBody,
   CCardGroup,
   CCol,
   CContainer,
-  CForm,
-  CInput,
-  CInputGroup,
-  CInputGroupPrepend,
-  CInputGroupText,
   CRow,
 } from '@coreui/react'
-import CIcon from '@coreui/icons-react'
 import FormikLoginBasicContainer from "../../../formik-wrappers/FormikLoginBasicContainer"
 import AuthService from "../../../services/auth.service";
-import {Formik, Form, Field, ErrorMessage} from 'formik'
-import { withRouter, useHistory,useLocation,Redirect } from "react-router-dom";
+import {Redirect } from "react-router-dom";
 
 
 
 
-const Loading =()=> (
- <div class="h-100 d-flex align-items-center flex-column">
-  <div class="spinner-border" role="status">
-  </div>
-  <span class="text-primary">Loading...</span>
-</div>
-)
+// const Loading =()=> (
+//  <div class="h-100 d-flex align-items-center flex-column">
+//   <div class="spinner-border" role="status">
+//   </div>
+//   <span class="text-primary">Loading...</span>
+// </div>
+// )
 
 const user = AuthService.getCurrentUser();
 
 const Login = () => {
 
-  const history=useHistory()
+  // const history=useHistory()
   console.log('user',user)
 
   if(localStorage.lac_user) return <Redirect to="/dashboard" />

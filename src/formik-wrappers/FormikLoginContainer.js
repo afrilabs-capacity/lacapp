@@ -1,11 +1,10 @@
-import React, { useState,useEffect,useContext } from "react";
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import React, { useState,useContext } from "react";
+import { Formik, Form} from "formik";
 import * as Yup from "yup";
 import FormikControl from "./FormikControl";
 import { CCol, CRow, CButton } from "@coreui/react";
-import CIcon from "@coreui/icons-react";
 import AuthService from "../services/auth.service";
-import { withRouter, useHistory,useLocation,Redirect } from "react-router-dom";
+import { useHistory,useLocation,Redirect } from "react-router-dom";
 
 const initialValues = {
   email: "",
@@ -79,7 +78,7 @@ const FormikLoginContainer=({context})=> {
       onSubmit={onSubmit}
     >
       {(formik) => {
-        console.log("formik", formik);
+        //console.log("formik", formik);
         return (
           <Form>
             <FormikControl

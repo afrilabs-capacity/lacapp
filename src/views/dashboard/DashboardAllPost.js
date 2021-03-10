@@ -63,7 +63,7 @@ setCurrentPage(1)
             <CCardBody>
 
 
-              <table className="table table-hover  mb-2 d-none d-sm-table" style={styles.noBorder}>
+              <table className="table table-hover no-border mb-2 d-none d-sm-table" style={styles.noBorder}>
                 <thead className=""  style={styles.noBorder}>
                   <tr style={styles.noBorder}> 
                     <th>Title</th>
@@ -75,7 +75,8 @@ setCurrentPage(1)
                 </thead>
                 <tbody>
                     { articles.length ? articles.map((post)=>( 
-                    <tr key={post.id}><td>
+                    <tr key={post.id} style={styles.noBorder}>
+                      <td>
                     <a href={"/posts/edit/"+post.id}><h5>{post.title_en}</h5></a>
                       <div className="small text-muted">
                         <a href={"/posts/edit/"+post.id}><span>Edit</span></a> | Posted: {post.created_at}

@@ -27,8 +27,8 @@ export default [
       },
       {
         _tag: 'CSidebarNavItem',
-        name: 'Add Post',
-        to: '/posts/add',
+        name: 'Add Report',
+        to: '/report/add',
         icon: 'cil-drop',
       },
       {

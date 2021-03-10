@@ -1,4 +1,4 @@
-import React,{useContext,useEffect,useState} from "react"
+import React,{useContext} from "react"
 import {
     CModal,
     CModalHeader,
@@ -6,17 +6,15 @@ import {
     CModalBody,
     CModalFooter,
     CRow,
-    CCol,
-    CProgress
+    CCol
   } from '@coreui/react'
-  import axios from "axios";
   import FormikLoginContainer from '../formik-wrappers/FormikLoginContainer'
-  import AuthProvider from '../context/AuthContext'
+ 
 
 
 const LoginModal=({context})=>{
 
-    const {authModal,setAuthModal,apiAction,setApiAction}=useContext(context)
+    const {authModal,setAuthModal,setApiAction}=useContext(context)
 
      //alert(modal)
 

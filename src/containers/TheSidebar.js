@@ -21,21 +21,21 @@ const TheSidebar = () => {
   const dispatch = useDispatch()
   const show = useSelector(state => state.sidebarShow)
 
-  const styles={
-    noBorder:{
-        border:"none"
-    },
-    noBorderTop:{
-        borderBTop:"none"
-    },
-    navStyle:{
-        boxShadow: " 5px 0 9px -2px rgba(0,0,0,0.2)",
-        transition: "0.3s",
-        // border:"none",
-        backgroundColor:"white",
+//   const styles={
+//     noBorder:{
+//         border:"none"
+//     },
+//     noBorderTop:{
+//         borderBTop:"none"
+//     },
+//     navStyle:{
+//         boxShadow: " 5px 0 9px -2px rgba(0,0,0,0.2)",
+//         transition: "0.3s",
+//         // border:"none",
+//         backgroundColor:"white",
        
-    }
-}
+//     }
+// }
 
   return (
     <CSidebar

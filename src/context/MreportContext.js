@@ -10,21 +10,37 @@ const API_URL = urlService().baseUrl;
 
 const Context = createContext({});
 
-const initialArticle = {
+const initialreport = {
   id: null,
-  title_en: "",
-  body_en: null,
-  featured_en: null,
-  title_fr: "",
-  body_fr: null,
-  featured_fr: null,
-  status: "draft",
-  category: "",
+  regno: "",
+  first_name: "",
+  last_name: "",
+  gender: "",
+  age: "",
+  marital_status: "",
+  occupation: "",
+  state_of_origin: "",
+  case_type: "",
+  offence: "",
+  complaints: "",
+  court: "",
+  case_no: "",
+  date_case_received: "",
+  date_case_granted: "",
+  granted: "",
+  eligible: "",
+  active_case: "",
+  counsel_assigned: "",
+  date_case_completed: "",
+  completed_case: "",
+  case_outcome: "",
+  resolution: "",
+  role: "editor",
   created_at: null,
   updated_at: null,
 };
 
-const initialEditArticle = {
+const initialEditReport = {
   id: null,
   title_en: "",
   body_en: null,
@@ -53,25 +69,24 @@ const Provider = (props) => {
   let errorCount;
 
   const {
-    // article:initialArticle,
+    // report:initialreport,
     children,
   } = props;
 
   // Use State to keep the values
-  const [article, setArticle] = useState(initialArticle);
-  const [articles, setArticles] = useState([]);
+  const [report, setReport] = useState(initialreport);
+  const [caseType, setCaseType] = useState("");
+  const [reports, setReports] = useState([]);
+  const [counsels, setCounsels] = useState([]);
+  const [myState, setMyState] = useState([]);
   const [pagination, setPagination] = useState({});
   const [toast, setToast] = useState(false);
   const [toastType, setToastType] = useState("error");
   const [modal, setModal] = useState(false);
   const [authModal, setAuthModal] = useState(false);
   const [errors, setErrors] = useState([]);
-  const [selectedImageEn, setSelectedImageEn] = useState("");
-  const [selectedImageFr, setSelectedImageFr] = useState("");
-  const [selectedImageGlobal, setSelectedImageGlobal] = useState("");
-  const [featuredFor, setFeaturedFor] = useState("");
   const [editMode, setEditMode] = useState("new");
-  const [currentArticle, setCurrentArticle] = useState("");
+  const [currentReport, setCurrentReport] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [searchPhrase, setSearchPhrase] = useState("");
   const [fetching, setFetching] = useState(false);
@@ -84,10 +99,20 @@ const Provider = (props) => {
   useEffect(() => {
     //console.log("id",id)
     // updateFeatured()
-    // console.log("articles rebuilt",articles[0])
+    // console.log("reports rebuilt",reports[0])
     // console.log("pagination rebuilt",pagination)
-    // console.log("article rebuilt",article)
-  }, [article, articles, pagination]);
+    console.log("report rebuilt", report);
+    //if(report.case_type!=="")console.log("caseType",caseType)
+    if (report.case_type !== "") {
+      report.case_type == "Civil"
+        ? setCaseType("Civil")
+        : setCaseType("Criminal");
+    }
+  }, [report, reports, pagination]);
+
+  useEffect(() => {
+    console.log("caseType", caseType);
+  }, [caseType]);
 
   const KeysToErrorArray = (errors) => {
     Object.keys(errors).map((key, index) =>
@@ -95,79 +120,24 @@ const Provider = (props) => {
     );
   };
 
-  const updateArticle = (dataKey, data) => {
+  const updateReport = (dataKey, data) => {
     //console.log("data key", dataKey)
-    return setArticle((prevState) => {
+    return setReport((prevState) => {
       let newState = { ...prevState, [dataKey]: data };
       return newState;
     });
   };
 
-  const updateFeatured = () => {
-    //console.log("data key", dataKey)
-    article.featured_en !== null && setSelectedImageEn(article.featured_en);
-
-    article.featured_fr !== null && setSelectedImageFr(article.featured_fr);
-  };
-
-  const resetArticle = () => {
-    setArticle(initialArticle);
-    setSelectedImageEn("");
-    setSelectedImageFr("");
-    setCurrentArticle("");
-    setFeaturedFor("");
+  const resetReport = () => {
+    setReport(initialreport);
     setToast(false);
   };
 
-  const resetEditArticle = () => {
-    setArticle(initialEditArticle);
+  const resetEditReport = () => {
+    setReport(initialEditReport);
   };
 
-  const validateArticle = () => {
-    setErrors([]);
-    setToast(false);
-    errorCount = 0;
-    let tmpErrors = [];
-    if (article.status == "published") {
-      if (article.title_en == "") {
-        tmpErrors.push(
-          "Please enter article title (english) before publishing as (published status)"
-        );
-        errorCount++;
-      }
-
-      if ((article.body_en == null) & (article.type == "dash")) {
-        tmpErrors.push(
-          "Please enter article body (english) before publishing as (published status)"
-        );
-        errorCount++;
-      }
-
-      if (article.category == "") {
-        tmpErrors.push(
-          "Please select category before publishing as (published status)"
-        );
-        errorCount++;
-      }
-    }
-
-    if (article.status == "draft") {
-      if (article.title_en == "") {
-        tmpErrors.push(
-          "Please enter article title (english) before publishing as (draft status)"
-        );
-        errorCount++;
-      }
-    }
-
-    errorCount > 0 && setErrors((prevError) => [...prevError, ...tmpErrors]);
-
-    editMode == "new" && errorCount == 0 && publishArticleApi();
-
-    editMode == "update" && errorCount == 0 && updateArticleApi();
-  };
-
-  const publishArticleApi = () => {
+  const publishReportApi = () => {
     setLoginAction(initialLoginAction);
     setAuthModal(false);
     setApiAction(true);
@@ -176,8 +146,8 @@ const Provider = (props) => {
       .request({
         method: "post",
         headers: authHeader(),
-        url: API_URL + "post/new",
-        data: article,
+        url: API_URL + "report/monthly-report-new",
+        data: report,
       })
       .then((response) => {
         // updateGallery([])
@@ -185,7 +155,7 @@ const Provider = (props) => {
         //     ...prevGallery,...response.data.data.data.data
         //   ])
         setEditMode("update");
-        alert.show("New article created", { type: "success" });
+        alert.show("New report created", { type: "success" });
         history.replace({
           pathname: "/posts/edit/" + response.data.data.data.id,
           //search: '?query=abc',
@@ -217,8 +187,8 @@ const Provider = (props) => {
               case 401:
                 //alert.show("Token error",{type:'notice'})
                 setAuthModal(true);
-                setLoginAction((prevArticle) => {
-                  return { ...prevArticle, func: validateArticle };
+                setLoginAction((prevreport) => {
+                  //return {...prevreport,func:validatereport}
                 });
                 break;
               default:
@@ -235,7 +205,7 @@ const Provider = (props) => {
       });
   };
 
-  const updateArticleApi = () => {
+  const updateReportApi = () => {
     setLoginAction(initialLoginAction);
     setAuthModal(false);
     setApiAction(true);
@@ -245,11 +215,11 @@ const Provider = (props) => {
         method: "post",
         headers: authHeader(),
         url: API_URL + "post/update",
-        data: article,
+        data: report,
       })
       .then((response) => {
         setEditMode("update");
-        alert.show("Article Updated", { type: "success" });
+        alert.show("report Updated", { type: "success" });
         console.log("post response", response.data.data.data.id);
         setApiAction(false);
       })
@@ -271,9 +241,9 @@ const Provider = (props) => {
               case 401:
                 //alert.show("Token error",{type:'notice'})
                 setAuthModal(true);
-                setLoginAction((prevArticle) => {
-                  return { ...prevArticle, func: validateArticle };
-                });
+                // setLoginAction(prevreport=>{
+                //   return {...prevreport,func:validatereport}
+                // })
                 break;
               default:
                 !error.response
@@ -289,7 +259,7 @@ const Provider = (props) => {
       });
   };
 
-  const fetchArticleByIdApi = (id) => {
+  const fetchReportByIdApi = (id) => {
     setLoginAction(initialLoginAction);
     setAuthModal(false);
     setApiAction(true);
@@ -298,12 +268,12 @@ const Provider = (props) => {
       axios
         .get(API_URL + "post/" + id, { headers: authHeader() })
         .then((response) => {
-          setArticle((prevArticle) => {
-            return { ...prevArticle, ...response.data.data.data };
+          setReport((prevreport) => {
+            return { ...prevreport, ...response.data.data.data };
           });
 
           console.log("post response", response.data.data.data);
-          console.log("all articles", articles);
+          console.log("all reports", reports);
           setApiAction(false);
         })
         .catch((error) => {
@@ -318,10 +288,10 @@ const Provider = (props) => {
                 case 401:
                   //alert.show("Token error",{type:'notice'})
                   setAuthModal(true);
-                  setLoginAction((prevArticle) => {
+                  setLoginAction((prevreport) => {
                     return {
-                      ...prevArticle,
-                      func: fetchArticleByIdApi,
+                      ...prevreport,
+                      func: fetchReportByIdApi,
                       params: id,
                     };
                   });
@@ -343,7 +313,7 @@ const Provider = (props) => {
         });
   };
 
-  const deleteArticleApi = (id) => {
+  const deleteReportApi = (id) => {
     setLoginAction(initialLoginAction);
     setAuthModal(false);
     setApiAction(true);
@@ -352,16 +322,16 @@ const Provider = (props) => {
     axios
       .get(API_URL + "post/delete/" + id, { headers: authHeader() })
       .then((response) => {
-        // setUsers(prevArticle=>{
-        //   return {...prevArticle,...response.data.data.data}
+        // setUsers(prevreport=>{
+        //   return {...prevreport,...response.data.data.data}
         // })
 
-        // setPagination(prevArticle=>{
-        //   return {...prevArticle,...response.data.data.data}
+        // setPagination(prevreport=>{
+        //   return {...prevreport,...response.data.data.data}
         // })
-        alert.show("Article Deleted", { type: "success" });
-        const newList = articles.filter((item) => item.id !== id);
-        setArticles(newList);
+        alert.show("report Deleted", { type: "success" });
+        const newList = reports.filter((item) => item.id !== id);
+        setReports(newList);
 
         //
         console.log("post response", response.data.data.data);
@@ -382,12 +352,8 @@ const Provider = (props) => {
                   alert.show(error.response.data.status);
                 if (!error.response.data.code) {
                   setAuthModal(true);
-                  setLoginAction((prevArticle) => {
-                    return {
-                      ...prevArticle,
-                      func: deleteArticleApi,
-                      params: id,
-                    };
+                  setLoginAction((prevreport) => {
+                    return { ...prevreport, func: deleteReportApi, params: id };
                   });
                 }
 
@@ -408,8 +374,8 @@ const Provider = (props) => {
       });
   };
 
-  const fetchArticlesApi = () => {
-    setArticles([]);
+  const fetchReportsApi = () => {
+    setReports([]);
     setFetching(true);
     setFetchingFailMsg(null);
     setAuthModal(false);
@@ -421,19 +387,19 @@ const Provider = (props) => {
     axios
       .get(API_URL + "posts", { headers: authHeader() })
       .then((response) => {
-        setArticles((prevArticle) => {
-          return [...prevArticle, ...response.data.data.data.data];
+        setReports((prevreport) => {
+          return [...prevreport, ...response.data.data.data.data];
         });
 
-        setPagination((prevArticle) => {
-          return { ...prevArticle, ...response.data.data.data };
+        setPagination((prevreport) => {
+          return { ...prevreport, ...response.data.data.data };
         });
 
         !response.data.data.data.data.length &&
-          setFetchingFailMsg("No articles found");
+          setFetchingFailMsg("No reports found");
 
         setFetching(false);
-        console.log("post response all articles", response.data.data.data);
+        console.log("post response all reports", response.data.data.data);
         setApiAction(false);
       })
       .catch((error) => {
@@ -450,8 +416,8 @@ const Provider = (props) => {
                 //alert.show("Token error",{type:'notice'})
                 setAuthModal(true);
                 setFetchingFailMsg("Waiting for authorization...");
-                setLoginAction((prevArticle) => {
-                  return { ...prevArticle, func: fetchArticlesApi };
+                setLoginAction((prevreport) => {
+                  return { ...prevreport, func: fetchReportsApi };
                 });
                 break;
               default:
@@ -465,14 +431,14 @@ const Provider = (props) => {
         } else {
           alert.show("Invalid response", { type: "error" });
         }
-        // error.response!==undefined ? setFetchingFailMsg("No articles found") : setFetchingFailMsg("Unknown error")
+        // error.response!==undefined ? setFetchingFailMsg("No reports found") : setFetchingFailMsg("Unknown error")
         // let apiStatus=error.response!==undefined ? error.response.statusText : "Unknown error"
         // setErrors(prevError=>[...prevError,apiStatus])
       });
   };
 
   const goToPageApi = (page) => {
-    setArticles([]);
+    setReports([]);
     setCurrentPage(page);
     setAuthModal(false);
     setLoginAction(initialLoginAction);
@@ -482,15 +448,15 @@ const Provider = (props) => {
     axios
       .get(pagination.path + "?page=" + page, { headers: authHeader() })
       .then((response) => {
-        setArticles((prevArticle) => {
-          return [...prevArticle, ...response.data.data.data.data];
+        setReports((prevreport) => {
+          return [...prevreport, ...response.data.data.data.data];
         });
 
-        setPagination((prevArticle) => {
-          return { ...prevArticle, ...response.data.data.data };
+        setPagination((prevreport) => {
+          return { ...prevreport, ...response.data.data.data };
         });
 
-        console.log("post response all articles", response.data.data.data);
+        console.log("post response all reports", response.data.data.data);
         setApiAction(false);
       })
       .catch((error) => {
@@ -504,10 +470,10 @@ const Provider = (props) => {
                 break;
               case 401:
                 //alert.show("Token error",{type:'notice'})
-                setFetchingFailMsg("No articles found");
+                setFetchingFailMsg("No reports found");
                 setAuthModal(true);
-                setLoginAction((prevArticle) => {
-                  return { ...prevArticle, func: goToPageApi };
+                setLoginAction((prevreport) => {
+                  return { ...prevreport, func: goToPageApi };
                 });
                 break;
               default:
@@ -527,7 +493,7 @@ const Provider = (props) => {
   };
 
   const searchByPhraseApi = () => {
-    setArticles([]);
+    setReports([]);
     setFetching(true);
     setFetchingFailMsg(null);
     setAuthModal(false);
@@ -537,12 +503,12 @@ const Provider = (props) => {
     axios
       .get(API_URL + "post/search/" + searchPhrase, { headers: authHeader() })
       .then((response) => {
-        setArticles((prevArticle) => {
-          return [...prevArticle, ...response.data.data.data.data];
+        setReports((prevreport) => {
+          return [...prevreport, ...response.data.data.data.data];
         });
 
-        setPagination((prevArticle) => {
-          return { ...prevArticle, ...response.data.data.data };
+        setPagination((prevreport) => {
+          return { ...prevreport, ...response.data.data.data };
         });
 
         setFetching(false);
@@ -551,7 +517,7 @@ const Provider = (props) => {
         // alert(JSON.stringify(response.data) )
         console.log("get response", response.data.data.data);
         setApiAction(false);
-        //console.log("all articles",articles)
+        //console.log("all reports",reports)
       })
       .catch((error) => {
         setErrors([]);
@@ -566,8 +532,8 @@ const Provider = (props) => {
               case 401:
                 //alert.show("Token error",{type:'notice'})
                 setAuthModal(true);
-                setLoginAction((prevArticle) => {
-                  return { ...prevArticle, func: searchByPhraseApi };
+                setLoginAction((prevreport) => {
+                  return { ...prevreport, func: searchByPhraseApi };
                 });
                 break;
               default:
@@ -582,39 +548,94 @@ const Provider = (props) => {
           alert.show("Invalid response", { type: "error" });
         }
         //alert(JSON.stringify(error.response))
-        // error.response!==undefined ? setFetchingFailMsg("No articles found") : setFetchingFailMsg("Unknown error")
+        // error.response!==undefined ? setFetchingFailMsg("No reports found") : setFetchingFailMsg("Unknown error")
       });
   };
 
-  const articleContext = {
-    article,
-    articles,
-    updateArticle,
+  const fetchMonthlyConfigApi = () => {
+    setMyState([]);
+    setCounsels([]);
+    setFetching(true);
+    setFetchingFailMsg(null);
+    setAuthModal(false);
+    setLoginAction(initialLoginAction);
+    setApiAction(true);
+
+    axios
+      .get(API_URL + "report/fetch-monthly-config", { headers: authHeader() })
+      .then((response) => {
+        setMyState((prevreport) => {
+          return [...prevreport, ...response.data.states];
+        });
+
+        setCounsels((prevreport) => {
+          return [...prevreport, ...response.data.counsels];
+        });
+
+        console.log("data config api", response.data);
+        !response.data && setFetchingFailMsg("No reports found");
+
+        setFetching(false);
+        console.log("post response all reports", response.data);
+        setApiAction(false);
+      })
+      .catch((error) => {
+        setErrors([]);
+        setFetching(false);
+        setApiAction(false);
+        if (error.response) {
+          if (error.response.status) {
+            switch (error.response.status) {
+              case 500:
+                alert.show(error.response.statusText, { type: "error" });
+                break;
+              case 401:
+                //alert.show("Token error",{type:'notice'})
+                setAuthModal(true);
+                setFetchingFailMsg("Waiting for authorization...");
+                // setLoginAction(prevreport=>{
+                //   return {...prevreport,func:fetchreportsApi}
+                // })
+                break;
+              default:
+                !error.response
+                  ? alert.show("Server currently down", { type: "error" })
+                  : alert.show(error.response.statusText, { type: "error" });
+            }
+          } else {
+            alert.show("Server currently down", { type: "error" });
+          }
+        } else {
+          alert.show("Invalid response", { type: "error" });
+        }
+        // error.response!==undefined ? setFetchingFailMsg("No reports found") : setFetchingFailMsg("Unknown error")
+        // let apiStatus=error.response!==undefined ? error.response.statusText : "Unknown error"
+        // setErrors(prevError=>[...prevError,apiStatus])
+      });
+  };
+
+  const reportContext = {
+    report,
+    reports,
+    updateReport,
+    updateReportApi,
     toast,
     setToast,
     modal,
     setModal,
     errors,
-    validateArticle,
-    selectedImageFr,
-    selectedImageEn,
-    setSelectedImageEn,
-    setSelectedImageFr,
-    setFeaturedFor,
-    selectedImageGlobal,
-    setSelectedImageGlobal,
-    featuredFor,
     editMode,
-    setCurrentArticle,
-    setArticle,
+    setCurrentReport,
+    setReport,
     setEditMode,
-    resetArticle,
-    resetEditArticle,
-    initialEditArticle,
+    resetReport,
+    resetEditReport,
+    initialEditReport,
     toastType,
     setToastType,
-    fetchArticleByIdApi,
-    fetchArticlesApi,
+    fetchReportsApi,
+    fetchReportByIdApi,
+    fetchReportsApi,
     pagination,
     goToPageApi,
     currentPage,
@@ -629,38 +650,44 @@ const Provider = (props) => {
     loginAction,
     apiAction,
     setApiAction,
-    deleteArticleApi,
+    deleteReportApi,
     initialLoginAction,
     setLoginAction,
+    fetchMonthlyConfigApi,
+    publishReportApi,
+    caseType,
+    myState,
+    counsels,
   };
 
   // pass the value in provider and return
   return (
-    <Context.Provider value={articleContext} {...props}>
+    <Context.Provider value={reportContext} {...props}>
       {children}
     </Context.Provider>
   );
 };
 
-const ArticleProvider = {
+const MreportProvider = {
   Provider,
   Context,
 };
 
 Provider.propTypes = {
-  article: PropTypes.object,
+  report: PropTypes.object,
 };
 
-Provider.defaultProps = {
-  article: {
-    title_en: "",
-    body_en: null,
-    featured_en: null,
-    title_fr: "",
-    body_fr: null,
-    featured_fr: null,
-    status: "draft",
-  },
-};
+// Provider.defaultProps = {
+//   report: {
+//     title_en: "",
+//     body_en: null,
+//     featured_en:null,
+//     title_fr: "",
+//     body_fr: null,
+//     featured_fr:null,
+//     status:"draft"
+//   },
 
-export default ArticleProvider;
+// };
+
+export default MreportProvider;

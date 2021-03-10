@@ -186,10 +186,7 @@ useEffect(()=>{
 
 
  const LoadMore=()=>{
-
-
 pagination.next_page_url==null && setHasMore(false)
-
 pagination.next_page_url!==null && axios.request( {
     method: "get", 
     url: pagination.next_page_url, 

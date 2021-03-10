@@ -1,12 +1,6 @@
-import React,{useContext,useEffect} from 'react'
+import React,{useContext} from 'react'
 import ArticleProvider from "../context/ArticleContext"
-import {
-    CInputGroup,
-    CInputGroupPrepend,
-    CInputGroupText,
-    CInput,
-  } from '@coreui/react'
-  import CIcon from '@coreui/icons-react'
+
 
   const setUpdateModeOrNot=()=>{
 

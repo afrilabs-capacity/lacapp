@@ -1,13 +1,8 @@
 import React from 'react'
 import {
-  CBadge,
-  CDropdown,
-  CDropdownItem,
-  CDropdownMenu,
-  CDropdownToggle,
-  CProgress
+  CDropdown
 } from '@coreui/react'
-import CIcon from '@coreui/icons-react'
+
 
 const TheHeaderDropdownTasks = () => {
   const itemsCount = 5
