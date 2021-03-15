@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from "react";
 import UserProvider from "../context/UserContext";
 
-const UserRole = (props) => {
+const UserMonthly = (props) => {
   const { formik, name } = props;
   const { user, updateUser } = useContext(UserProvider.Context);
 
@@ -13,25 +13,25 @@ const UserRole = (props) => {
 
   return (
     <div className={""}>
-      <label>Administrator &nbsp;</label>
+      <label>Yes&nbsp;</label>
       <input
         type="radio"
         name={name}
-        checked={formik.values.role == "admin" ? true : false}
-        value="admin"
+        checked={formik.values.monthly_report == "Yes" ? true : false}
+        value="Yes"
         onChange={formik.handleChange}
         onBlur={formik.handleBlur}
       />
 
-      <label>&nbsp;&nbsp;&nbsp;Lawyer &nbsp;</label>
+      <label>&nbsp;&nbsp;&nbsp;No &nbsp;</label>
       <input
         type="radio"
         name={name}
-        value="lawyer"
-        checked={formik.values.role == "lawyer" ? true : false}
+        value="No"
+        checked={formik.values.monthly_report == "No" ? true : false}
         onChange={formik.handleChange}
       />
     </div>
   );
 };
-export default UserRole;
+export default UserMonthly;

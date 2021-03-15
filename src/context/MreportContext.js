@@ -35,9 +35,7 @@ const initialreport = {
   completed_case: "",
   case_outcome: "",
   resolution: "",
-  role: "editor",
-  created_at: null,
-  updated_at: null,
+  role: "lawyer",
 };
 
 const initialEditReport = {
