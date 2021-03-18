@@ -31,6 +31,7 @@ import UserCentre from "../../inputs/user-centres-id";
 import UserMonthly from "../../inputs/user-for-monthly";
 import UserGender from "../../inputs/user-gender";
 import UserTable from "../../inputs/user-table";
+import { useParams, useLocation } from "react-router-dom";
 
 const getBadge = (status) => {
   switch (status) {
@@ -47,27 +48,34 @@ const getBadge = (status) => {
   }
 };
 
-const DashboardAddUser = () => {
+const DashboardUpdateUser = () => {
   const {
-    toast,
-    fetchUsersApi,
     fetchZonesApi,
-    users,
-    setUser,
-    addUserApi,
     errors,
-    deleteUserApi,
     apiAction,
     fetchingFailMsg,
-    pagination,
+    fetchUserByIdApi,
+    fetchStatesApi,
+    fetchCentresApi,
+    updateUserApi,
+    user,
   } = useContext(UserProvider.Context);
 
-  const [addUserFormActive, setAddUserFormActive] = useState(false);
+  const { id } = useParams();
+
+  const [addUserFormActive, setAddUserFormActive] = useState(true);
 
   useEffect(() => {
-    fetchUsersApi();
+    //fetchUsersApi();
+    fetchUserByIdApi(id);
+    fetchStatesApi(user);
     fetchZonesApi();
   }, []);
+
+  useEffect(() => {
+    fetchStatesApi(user.zone_id);
+    fetchCentresApi(user.state_id);
+  }, [user]);
 
   const Styles = {
     errorColor: {
@@ -90,20 +98,8 @@ const DashboardAddUser = () => {
   };
 
   const formik = useFormik({
-    initialValues: {
-      names: "",
-      email: "",
-      status: "",
-      qualification: "",
-      state_id: "",
-      zone_id: "",
-      centre_id: "",
-      gl: "",
-      sex: "",
-      phone: "",
-      role: "lawyer",
-      monthly_report: "No",
-    },
+    enableReinitialize: true,
+    initialValues: user,
     validationSchema: Yup.object({
       names: Yup.string()
         .max(15, "Must be 7 characters or less")
@@ -128,7 +124,7 @@ const DashboardAddUser = () => {
     }),
     onSubmit: (values) => {
       //setUser(values)
-      addUserApi(values);
+      updateUserApi(values);
       //alert(JSON.stringify(values, null, 2));
     },
   });
@@ -148,28 +144,16 @@ const DashboardAddUser = () => {
                 <CRow className="text-center mb-4 mt-1">
                   <CCol>
                     <h1 className="text-center btn-site-theme">
-                      New User Form
+                      Update User Form
                     </h1>
                   </CCol>
                 </CRow>
                 <CCard>
-                  <CCardHeader>
+                  {/* <CCardHeader>
                     <CRow>
                       <CCol xl={6}>Add User</CCol>
-
-                      <CCol xl={6} className="text-right">
-                        <button
-                          className="btn  px-4 btn-site-theme-bg"
-                          disabled={apiAction}
-                          onClick={() =>
-                            setAddUserFormActive((prev) => (prev = !prev))
-                          }
-                        >
-                          Users
-                        </button>
-                      </CCol>
                     </CRow>
-                  </CCardHeader>
+                  </CCardHeader> */}
 
                   <CCardBody>
                     <form onSubmit={formik.handleSubmit}>
@@ -440,7 +424,7 @@ const DashboardAddUser = () => {
                               className="btn btn-site-theme-bg px-4 w-100"
                               disabled={apiAction}
                             >
-                              Add
+                              Update
                             </button>
                           )}
                           <div style={{ color: "red" }} className="mt-2">
@@ -468,109 +452,6 @@ const DashboardAddUser = () => {
             <></>
           )}
 
-          {!addUserFormActive ? (
-            <CRow>
-              <CCol md="12">
-                {/* <CCol xl={12}>
-                <CCard>
-                  <CCardHeader style={styles.noBorder}>
-                    <CRow className="mt-4">
-                      <CCol md="8">
-                        Attendees | Showing Page{" "}
-                        <b>{users.length ? pagination.from : ""}</b>-
-                        <b>{users.length ? pagination.to : ""}</b> of{" "}
-                        <b>{users.length ? pagination.total : ""}</b> Results
-                      </CCol>
-
-                      <CCol md="4 text-right ">
-                        <button
-                          className="btn  px-4 btn-site-theme-bg"
-                          disabled={apiAction}
-                          onClick={() =>
-                            setAddUserFormActive((prev) => (prev = !prev))
-                          }
-                        >
-                          Add User
-                        </button>
-                      </CCol>
-                    </CRow>
-                  </CCardHeader>
-                  <CCardBody>
-                    <table
-                      className="table table-hover  mb-2 d-none d-sm-table w-100"
-                      style={{ border: "none" }}
-                    >
-                      <thead>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Registered</th>
-                        <th>Role</th>
-                        <th>Trash</th>
-                        <th>View</th>
-                      </thead>
-                      <tbody>
-                        {users.length
-                          ? users.map((user, i) => (
-                              <tr key={i}>
-                                <td className="pd-2">{user.names}</td>
-                                <td className="pd-2">{user.email}</td>
-                                <td className="pd-2">{user.registered}</td>
-                                <td className="pd-2">{user.role}</td>
-                                <td className="pd-2">
-                                  {
-                                    <FontAwesomeIcon
-                                      className="btn-site-theme"
-                                      style={{
-                                        cursor: "pointer",
-                                      }}
-                                      onClick={() => deleteUserApi(user.id)}
-                                      icon={faTrash}
-                                    />
-                                  }
-                                </td>
-                                <td>
-                                  <div className="clearfix">
-                                    <div className="float-left">
-                                      <a href={"/user/profile/" + user.id}>
-                                        <span>
-                                          <FontAwesomeIcon icon={faEye} />
-                                        </span>
-                                      </a>
-                                    </div>
-                                  </div>
-                                </td>
-                              </tr>
-                            ))
-                          : ""}
-                      </tbody>
-                    </table>
-                    {!users.length && apiAction && (
-                      <h3 className="mb-4">Loading..</h3>
-                    )}
-
-                    {!users.length && fetchingFailMsg !== null && (
-                      <h3 className="mb-4">{fetchingFailMsg}</h3>
-                    )}
-
-                    {users.length ? (
-                      <Paginations context={UserProvider.Context} />
-                    ) : (
-                      ""
-                    )}
-                  </CCardBody>
-                </CCard>
-              </CCol> */}
-                <UserTable
-                  users={users}
-                  options={{ setAddUserFormActive, apiAction }}
-                  context={UserProvider.Context}
-                />
-              </CCol>
-            </CRow>
-          ) : (
-            <></>
-          )}
-
           <LoginModal context={UserProvider.Context} />
         </CCol>
       </CRow>
@@ -578,4 +459,4 @@ const DashboardAddUser = () => {
   );
 };
 
-export default DashboardAddUser;
+export default DashboardUpdateUser;

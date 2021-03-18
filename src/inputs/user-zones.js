@@ -11,6 +11,7 @@ const UserZone = (props) => {
         onChange={(e) => {
           fetchStatesApi(e.target.value);
           formik.setFieldValue("state_id", "");
+          formik.setFieldValue("centre_id", "");
           return formik.handleChange(e);
         }}
         onBlur={formik.handleBlur}

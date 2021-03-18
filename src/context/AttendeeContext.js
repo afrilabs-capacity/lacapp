@@ -42,18 +42,6 @@ const Provider = (props) => {
       .then((response) => {
         console.log("fetch attendees", response.data.data.data);
         setAttendee(response.data.data.data);
-
-        // if(response.data.data.data.refs!==null){
-
-        //   setAttendee(prevArticle=>{
-        //     return {...prevArticle,refs:response.data.data.data.refs}
-        //   })
-        // }
-
-        // setPagination(prevArticle=>{
-        //   return {...prevArticle,...response.data.data.data}
-        // })
-
         setFetching(false);
         console.log(
           "post response all attendees",

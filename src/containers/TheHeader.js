@@ -44,12 +44,8 @@ const TheHeader = () => {
   };
 
   return (
-    <CHeader
-      withSubheader
-      //className="border-0 shadow-sm"
-      style={{ backgroundColor: "#fff", borderBottom: "none" }}
-    >
-      {/* <CToggler
+    <CHeader withSubheader className="border-0 shadow-sm">
+      <CToggler
         inHeader
         className="ml-md-3 d-lg-none"
         onClick={toggleSidebarMobile}
@@ -58,12 +54,12 @@ const TheHeader = () => {
         inHeader
         className="ml-3 d-md-down-none"
         onClick={toggleSidebar}
-      /> */}
+      />
       {/* <CHeaderBrand className="mx-auto d-lg-none" to="/">
         <CIcon name="logo" height="48" alt="Logo"/>
       </CHeaderBrand> */}
 
-      <CHeaderNav className="d-md-down-none mr-auto shadow w-100 d-flex flex-row justify-content-between">
+      <CHeaderNav className="d-md-down-none mr-auto">
         <CHeaderNavItem className="px-3">
           <CHeaderNavLink to="/dashboard">Home</CHeaderNavLink>
         </CHeaderNavItem>
@@ -71,22 +67,16 @@ const TheHeader = () => {
         <CHeaderNavItem className="px-3">
           <CHeaderNavLink to="/user/setting">Settings</CHeaderNavLink>
         </CHeaderNavItem>
-
         <CHeaderNavItem className="px-3">
-          Welcome back,{" "}
-          <b className="btn-site-theme">
-            {user ? ` ${user.name.split(" ")[0]}` : ""}
-          </b>
+          Welcome back, <b>{user ? ` ${user.name.split(" ")[0]}` : ""}</b>
         </CHeaderNavItem>
-
-        <TheHeaderDropdown />
       </CHeaderNav>
 
       <CHeaderNav className="px-3">
-        {/* <TheHeaderDropdownNotif />
+        <TheHeaderDropdownNotif />
         <TheHeaderDropdownTasks />
-        <TheHeaderDropdownMssg /> */}
-        {/* <TheHeaderDropdown /> */}
+        <TheHeaderDropdownMssg />
+        <TheHeaderDropdown />
       </CHeaderNav>
 
       {/* <CSubheader className="px-3 justify-content-between border-0 border-bottom-0">

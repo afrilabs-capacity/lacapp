@@ -134,7 +134,9 @@ const DashboardAddReport = (props) => {
     },
     //enableReinitialize:true,
     validationSchema: Yup.object({
-      regno: Yup.string().required("Field required"),
+      regno: Yup.string()
+        .required()
+        .matches(/^[0-9]+$/, "Must be only digits"),
       first_name: Yup.string().required("Field required"),
       last_name: Yup.string().required("Field required"),
       gender: Yup.string().required("Field required"),

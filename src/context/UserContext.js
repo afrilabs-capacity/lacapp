@@ -66,8 +66,9 @@ const Provider = (props) => {
 
   // const [featuredFor,setFeaturedFor]=useState("")
   useEffect(() => {
-    //alert.show(modal)
-  }, []);
+    //alert.show(typeof user.zone == "object" ? user.zone.zone : "initializing");
+    //console.log("user in useefect", user.zone.created_at);
+  }, [user.zone]);
 
   const showLoginModal = () => "hi";
 
@@ -97,12 +98,24 @@ const Provider = (props) => {
       .request({
         method: "post",
         headers: authHeader(),
-        url: API_URL + "user/new",
+        url: API_URL + "user/register",
         data: userdata,
       })
       .then((response) => {
         alert.show("New user created!", { type: "success" });
-        fetchUsersApi();
+
+        console.log("user created", response.data.user.id);
+        history.replace({
+          pathname: "/user/profile/" + response.data.user.id,
+          //search: '?query=abc',
+          id: response.data.user.id,
+          state: {
+            id: response.data.user.id,
+            navType: "post_save",
+            data: response.data.user.id,
+          },
+        });
+        //fetchUsersApi();
         setApiAction(false);
         //   console.log("post response",response.data.data.data.id)
       })
@@ -131,6 +144,84 @@ const Provider = (props) => {
                     return {
                       ...prevArticle,
                       func: addUserApi,
+                      params: userdata,
+                    };
+                  });
+                }
+
+                break;
+              default:
+                !error.response
+                  ? alert.show("Server currently down", { type: "error" })
+                  : alert.show(error.response.statusText, { type: "error" });
+            }
+          } else {
+            alert.show("Server currently down", { type: "error" });
+          }
+        } else {
+          alert.show("Invalid response", { type: "error" });
+        }
+      });
+  };
+
+  const updateUserApi = (userdata) => {
+    setErrors([]);
+    setLoginAction(initialLoginAction);
+    setAuthModal(false);
+    setApiAction(true);
+    setFetchingFailMsg(null);
+    // setErrors(prevErrors=>[...prevErrors,"ready to add user"])
+
+    axios
+      .request({
+        method: "post",
+        headers: authHeader(),
+        url: API_URL + "user/update",
+        data: userdata,
+      })
+      .then((response) => {
+        alert.show("Updated!", { type: "success" });
+
+        console.log("user created", response.data.user.id);
+        history.replace({
+          pathname: "/user/profile/" + response.data.user.id,
+          //search: '?query=abc',
+          id: response.data.user.id,
+          state: {
+            id: response.data.user.id,
+            navType: "post_save",
+            data: response.data.user.id,
+          },
+        });
+        //fetchUsersApi();
+        setApiAction(false);
+        //   console.log("post response",response.data.data.data.id)
+      })
+      .catch((error) => {
+        setErrors([]);
+        setApiAction(false);
+        if (error.response) {
+          if (error.response.status) {
+            switch (error.response.status) {
+              case 500:
+                alert.show(error.response.statusText, { type: "error" });
+                break;
+              case 422:
+                KeysToErrorArray(error.response.data.errors);
+                break;
+              case 409:
+                KeysToErrorArray(error.response.data.errors);
+                break;
+              case 401:
+                //alert.show("Token error",{type:'notice'})
+                error.response.data.code == "402" &&
+                  alert.show(error.response.data.status);
+                if (!error.response.data.code) {
+                  setAuthModal(true);
+                  setLoginAction((prevArticle) => {
+                    return {
+                      ...prevArticle,
+                      func: updateUserApi,
                       params: userdata,
                     };
                   });
@@ -272,6 +363,71 @@ const Provider = (props) => {
       });
   };
 
+  const fetchUserByIdApi = (id) => {
+    setUsers([]);
+    setFetching(true);
+    setAuthModal(false);
+    setApiAction(true);
+    setFetchingFailMsg(null);
+    //alert("Hi there man")
+    axios
+      .get(API_URL + "user/user/" + id, { headers: authHeader() })
+      .then((response) => {
+        console.log("fetch  user", typeof response.data.user.zone);
+        setUser((prevArticle) => {
+          return { ...prevArticle, ...response.data.user };
+        });
+
+        setFetching(false);
+        // console.log("post response all articles", response.data.data.data);
+        setApiAction(false);
+      })
+      .catch((error) => {
+        setErrors([]);
+        setFetching(false);
+        setApiAction(false);
+        if (error.response) {
+          if (error.response.status) {
+            switch (error.response.status) {
+              case 500:
+                alert.show(error.response.statusText, { type: "error" });
+                break;
+              case 422:
+                KeysToErrorArray(error.response.data.errors);
+                break;
+              case 409:
+                KeysToErrorArray(error.response.data.errors);
+                break;
+              case 401:
+                setAuthModal(true);
+                setFetchingFailMsg("Waiting for authorization...");
+                setLoginAction((prevstate) => {
+                  return {
+                    ...prevstate,
+                    func: fetchUserByIdApi,
+                    params: id,
+                  };
+                });
+
+                break;
+              default:
+                !error.response
+                  ? alert.show("Server currently down", { type: "error" })
+                  : alert.show(error.response.statusText, { type: "error" });
+            }
+          } else {
+            alert.show("Server currently down", { type: "error" });
+          }
+        } else {
+          alert.show("Invalid response", { type: "error" });
+        }
+
+        //   error.response!==undefined ? setFetchingFailMsg("No programmes found") : setFetchingFailMsg("Unknown error")
+        // let apiStatus=error.response!==undefined ? error.response.statusText : "Unknown error"
+        // setErrors(prevError=>[...prevError,apiStatus])
+      });
+  };
+
   const fetchUsersApi = () => {
     setUsers([]);
     setFetching(true);
@@ -284,12 +440,12 @@ const Provider = (props) => {
       .then((response) => {
         console.log("fetch articles user", response.data);
         setUsers((prevArticle) => {
-          return [...prevArticle, ...response.data.data.data.data];
+          return [...prevArticle, ...response.data.data.data];
         });
 
-        setPagination((prevArticle) => {
-          return { ...prevArticle, ...response.data.data.data };
-        });
+        // setPagination((prevArticle) => {
+        //   return { ...prevArticle, ...response.data.data.data };
+        // });
 
         setFetching(false);
         // console.log("post response all articles", response.data.data.data);
@@ -628,6 +784,8 @@ const Provider = (props) => {
     fetchZonesApi,
     fetchStatesApi,
     fetchCentresApi,
+    fetchUserByIdApi,
+    updateUserApi,
   };
 
   // pass the value in provider and return

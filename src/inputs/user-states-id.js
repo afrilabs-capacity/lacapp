@@ -18,7 +18,7 @@ const UserState = (props) => {
         className="form-control"
         name={name}
       >
-        <option value="" defaultValue disabled>
+        <option value="" disabled>
           Select
         </option>
         {myStates.map((item) => (
