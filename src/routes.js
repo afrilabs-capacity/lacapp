@@ -77,6 +77,10 @@ const DashboardAddReport = React.lazy(() =>
   import("./views/dashboard/DashboardAddReport")
 );
 
+const DashboardMonthlyReport = React.lazy(() =>
+  import("./views/dashboard/DashboardMonthlyReport")
+);
+
 const CoreUIIcons = React.lazy(() =>
   import("./views/icons/coreui-icons/CoreUIIcons")
 );
@@ -235,6 +239,12 @@ const routes = [
     exact: true,
     name: "User",
     component: DashboardAddReport,
+  },
+  {
+    path: "/reports/monthly/:id",
+    exact: true,
+    name: "User",
+    component: DashboardMonthlyReport,
   },
 ];
 

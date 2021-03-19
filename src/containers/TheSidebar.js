@@ -66,8 +66,8 @@ const TheSidebar = () => {
         /> */}
           {
             <img
-              src="https://drive.google.com/uc?export=view&id=17pIK2duMqUQkvarbKCiQfudDT1DQhkVI"
-              width="150px"
+              src="https://drive.google.com/uc?export=view&id=1e5qz-p0nv5Ng2AVsDcaTqZM7VspDiD3d"
+              width="80px"
             ></img>
           }
         </CSidebarBrand>

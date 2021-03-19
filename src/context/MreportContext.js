@@ -91,6 +91,7 @@ const Provider = (props) => {
   const [fetchingFailMsg, setFetchingFailMsg] = useState(null);
   const [loginAction, setLoginAction] = useState(initialLoginAction);
   const [apiAction, setApiAction] = useState(false);
+  const [monthlyReportCanReport, setMonthlyReportCanReport] = useState(false);
 
   // const [featuredFor,setFeaturedFor]=useState("")
 
@@ -108,9 +109,9 @@ const Provider = (props) => {
     }
   }, [report, reports, pagination]);
 
-  useEffect(() => {
-    console.log("caseType", caseType);
-  }, [caseType]);
+  // useEffect(() => {
+  //   console.log("caseType", caseType);
+  // }, [caseType]);
 
   const KeysToErrorArray = (errors) => {
     Object.keys(errors).map((key, index) =>
@@ -135,7 +136,7 @@ const Provider = (props) => {
     setReport(initialEditReport);
   };
 
-  const publishReportApi = () => {
+  const publishReportApi = (data) => {
     setLoginAction(initialLoginAction);
     setAuthModal(false);
     setApiAction(true);
@@ -145,26 +146,26 @@ const Provider = (props) => {
         method: "post",
         headers: authHeader(),
         url: API_URL + "report/monthly-report-new",
-        data: report,
+        data: data,
       })
       .then((response) => {
         // updateGallery([])
         //   updateGallery(prevGallery=>[
         //     ...prevGallery,...response.data.data.data.data
         //   ])
-        setEditMode("update");
-        alert.show("New report created", { type: "success" });
+        //setEditMode("update");
+        //alert.show("New report created", { type: "success" });
         history.replace({
-          pathname: "/posts/edit/" + response.data.data.data.id,
+          pathname: "/reports/monthly/" + response.data.report.id,
           //search: '?query=abc',
-          id: response.data.data.data.id,
+          id: response.data.report.id,
           state: {
-            id: response.data.data.data.id,
+            id: response.data.report.id,
             navType: "post_save",
-            data: response.data.data.data,
+            data: response.data.report.id,
           },
         });
-        console.log("post response", response.data.data.data.id);
+        //console.log("post response", response.data.data.data.id);
         setApiAction(false);
       })
       .catch((error) => {
@@ -264,13 +265,13 @@ const Provider = (props) => {
 
     authHeader() !== "" &&
       axios
-        .get(API_URL + "post/" + id, { headers: authHeader() })
+        .get(API_URL + "report/fetch-report-monthly/" + id, {
+          headers: authHeader(),
+        })
         .then((response) => {
           setReport((prevreport) => {
-            return { ...prevreport, ...response.data.data.data };
+            return { ...prevreport, ...response.data.report };
           });
-
-          console.log("post response", response.data.data.data);
           console.log("all reports", reports);
           setApiAction(false);
         })
@@ -558,6 +559,7 @@ const Provider = (props) => {
     setAuthModal(false);
     setLoginAction(initialLoginAction);
     setApiAction(true);
+    setMonthlyReportCanReport(false);
 
     axios
       .get(API_URL + "report/fetch-monthly-config", { headers: authHeader() })
@@ -569,6 +571,11 @@ const Provider = (props) => {
         setCounsels((prevreport) => {
           return [...prevreport, ...response.data.counsels];
         });
+
+        //check if user is enabled for monthly report
+        response.data.monthly_report &&
+          response.data.can_report &&
+          setMonthlyReportCanReport(true);
 
         console.log("data config api", response.data);
         !response.data && setFetchingFailMsg("No reports found");
@@ -591,9 +598,9 @@ const Provider = (props) => {
                 //alert.show("Token error",{type:'notice'})
                 setAuthModal(true);
                 setFetchingFailMsg("Waiting for authorization...");
-                // setLoginAction(prevreport=>{
-                //   return {...prevreport,func:fetchreportsApi}
-                // })
+                setLoginAction((prevreport) => {
+                  return { ...prevreport, func: fetchMonthlyConfigApi };
+                });
                 break;
               default:
                 !error.response
@@ -656,6 +663,7 @@ const Provider = (props) => {
     caseType,
     myState,
     counsels,
+    monthlyReportCanReport,
   };
 
   // pass the value in provider and return

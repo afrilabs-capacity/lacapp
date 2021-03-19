@@ -398,16 +398,24 @@ const Provider = (props) => {
               case 409:
                 KeysToErrorArray(error.response.data.errors);
                 break;
+
               case 401:
-                setAuthModal(true);
-                setFetchingFailMsg("Waiting for authorization...");
-                setLoginAction((prevstate) => {
-                  return {
-                    ...prevstate,
-                    func: fetchUserByIdApi,
-                    params: id,
-                  };
-                });
+                //error falls in the category of unauthorized but has to do with other route constraints such as (user not admin)
+                error.response.data.code == "402" &&
+                  alert.show(error.response.data.status);
+
+                //error falls in the category of expired token
+                if (!error.response.data.code) {
+                  setAuthModal(true);
+                  setFetchingFailMsg("Waiting for authorization...");
+                  setLoginAction((prevstate) => {
+                    return {
+                      ...prevstate,
+                      func: fetchUserByIdApi,
+                      params: id,
+                    };
+                  });
+                }
 
                 break;
               default:
@@ -421,10 +429,6 @@ const Provider = (props) => {
         } else {
           alert.show("Invalid response", { type: "error" });
         }
-
-        //   error.response!==undefined ? setFetchingFailMsg("No programmes found") : setFetchingFailMsg("Unknown error")
-        // let apiStatus=error.response!==undefined ? error.response.statusText : "Unknown error"
-        // setErrors(prevError=>[...prevError,apiStatus])
       });
   };
 
@@ -442,13 +446,7 @@ const Provider = (props) => {
         setUsers((prevArticle) => {
           return [...prevArticle, ...response.data.data.data];
         });
-
-        // setPagination((prevArticle) => {
-        //   return { ...prevArticle, ...response.data.data.data };
-        // });
-
         setFetching(false);
-        // console.log("post response all articles", response.data.data.data);
         setApiAction(false);
       })
       .catch((error) => {
@@ -468,11 +466,18 @@ const Provider = (props) => {
                 KeysToErrorArray(error.response.data.errors);
                 break;
               case 401:
-                setAuthModal(true);
-                setFetchingFailMsg("Waiting for authorization...");
-                setLoginAction((prevArticle) => {
-                  return { ...prevArticle, func: fetchUsersApi };
-                });
+                //error falls in the category of unauthorized but has to do with other route constraints such as (user not admin)
+                error.response.data.code == "402" &&
+                  alert.show(error.response.data.status);
+
+                //error falls in the category of expired token
+                if (!error.response.data.code) {
+                  setAuthModal(true);
+                  setFetchingFailMsg("Waiting for authorization...");
+                  setLoginAction((prevArticle) => {
+                    return { ...prevArticle, func: fetchUsersApi };
+                  });
+                }
 
                 break;
               default:
