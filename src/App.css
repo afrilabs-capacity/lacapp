@@ -121,6 +121,11 @@ display: none;
 }
 
 /*themed styles*/
+
+.lac-site-theme {
+  /* color: #d83623; */
+  color: #d83623;
+}
 .btn-site-theme-bg {
   background-color: #d83623;
   color: #fff;

@@ -1,30 +1,27 @@
-import React, { useState,useContext } from "react";
-import { Formik, Form} from "formik";
+import React, { useState, useContext } from "react";
+import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import FormikControl from "./FormikControl";
 import { CCol, CRow, CButton } from "@coreui/react";
 import AuthService from "../services/auth.service";
-import { useHistory,useLocation,Redirect } from "react-router-dom";
+import { useHistory, useLocation, Redirect } from "react-router-dom";
 
 const initialValues = {
   email: "",
   password: "",
 };
 
-
-
 const validationSchema = Yup.object({
   email: Yup.string().email("Invalid Mail Format").required("required"),
   password: Yup.string().required("required"),
 });
 
-const FormikLoginContainer=({context})=> {
-      
+const FormikLoginContainer = ({ context }) => {
   const history = useHistory();
-  const location= useLocation()
-  const {setAuthModal,loginAction,apiAction}=useContext(context)
+  const location = useLocation();
+  const { setAuthModal, loginAction, apiAction } = useContext(context);
 
- const { from } = location.state || { from: { pathname: "/dashboard" } };
+  const { from } = location.state || { from: { pathname: "/dashboard" } };
   const [apiError, setApiError] = useState(null);
 
   const onSubmit = (values, onSubmitProps) => {
@@ -33,16 +30,17 @@ const FormikLoginContainer=({context})=> {
     onSubmitProps.setSubmitting(true);
     AuthService.login(values.email, values.password).then(
       () => {
-        if(context){
-        
+        if (context) {
           //call intended function after relogin
-          loginAction && loginAction.params ? loginAction.func(loginAction.params ): loginAction.func()
+          loginAction && loginAction.params
+            ? loginAction.func(loginAction.params)
+            : loginAction.func();
 
           //close login modal
-          setAuthModal(false)
-        }else{
-           history.push("/dashboard");
-        } 
+          setAuthModal(false);
+        } else {
+          history.push("/dashboard");
+        }
         //window.location.reload();
       },
       (error) => {
@@ -61,7 +59,7 @@ const FormikLoginContainer=({context})=> {
               setApiError("Invalid Username or Password");
           }
         } else {
-            onSubmitProps.setSubmitting(false);
+          onSubmitProps.setSubmitting(false);
           setApiError(error.message);
         }
         onSubmitProps.setSubmitting(false);
@@ -99,10 +97,10 @@ const FormikLoginContainer=({context})=> {
 
             {apiError !== null ? (
               <CRow>
-              <CCol xs="12">
-                <div class="alert alert-danger" role="alert">
-                  {apiError}
-                </div>
+                <CCol xs="12">
+                  <div class="alert alert-danger" role="alert">
+                    {apiError}
+                  </div>
                 </CCol>
               </CRow>
             ) : (
@@ -111,23 +109,26 @@ const FormikLoginContainer=({context})=> {
 
             <CRow>
               <CCol xs="6">
-              
-                  { 
-                    apiAction ? 
-                    <button className="btn btn-primary px-4"  disabled={apiAction}>
-                      <span
-                        className="spinner-grow spinner-grow-sm"
-                        role="status"
-                        aria-hidden="true"
-                      ></span>
-                      Loading...
-                    </button> : 
-                    <button className="btn btn-primary px-4"  disabled={apiAction}>
-                    
-                      Login
-                    </button>
-                  }
-                
+                {apiAction ? (
+                  <button
+                    className="btn btn-site-theme-bg px-4"
+                    disabled={apiAction}
+                  >
+                    <span
+                      className="spinner-grow spinner-grow-sm"
+                      role="status"
+                      aria-hidden="true"
+                    ></span>
+                    Loading...
+                  </button>
+                ) : (
+                  <button
+                    className="btn btn-site-theme-bg px-4"
+                    disabled={apiAction}
+                  >
+                    Login
+                  </button>
+                )}
               </CCol>
               <CCol xs="6" className="text-right">
                 <CButton color="link" className="px-0">
@@ -140,6 +141,6 @@ const FormikLoginContainer=({context})=> {
       }}
     </Formik>
   );
-}
+};
 
 export default FormikLoginContainer;

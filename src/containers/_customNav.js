@@ -5,25 +5,14 @@ export default [
     to: "/dashboard",
     icon: "cil-speedometer",
     badge: {
-      color: "info",
+      color: "danger btn-site-theme-bg",
       text: "NEW",
     },
   },
 
   {
     _tag: "CSidebarNavTitle",
-    _children: ["Events"],
-  },
-  {
-    _tag: "CSidebarNavItem",
-    name: "Manage Programmes",
-    to: "/programmes/all",
-    icon: "cil-drop",
-  },
-
-  {
-    _tag: "CSidebarNavTitle",
-    _children: ["All Posts"],
+    _children: ["Reports"],
   },
   {
     _tag: "CSidebarNavItem",
@@ -34,7 +23,7 @@ export default [
   {
     _tag: "CSidebarNavItem",
     name: "Manage Reports",
-    to: "/posts/all",
+    to: "/reports/checkpoint",
     icon: "cil-pencil",
   },
 
@@ -47,5 +36,15 @@ export default [
     name: "Users",
     to: "/users/add",
     icon: "cil-user-follow",
+  },
+  {
+    _tag: "CSidebarNavTitle",
+    _children: ["Audit"],
+  },
+  {
+    _tag: "CSidebarNavItem",
+    name: "Audit History",
+    to: "/programmes/all",
+    icon: "cil-drop",
   },
 ];

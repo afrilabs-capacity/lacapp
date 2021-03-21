@@ -1,4 +1,9 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState, useEffect } from "react";
+import { CSVLink } from "react-csv";
+import { useExportData } from "react-table-plugins";
+import Papa from "papaparse";
+import XLSX from "xlsx";
+
 import {
   useTable,
   useSortBy,
@@ -90,33 +95,43 @@ const Styles = styled.div`
 
 const myColumns = [
   {
-    Header: "Names",
-    accessor: "names",
+    Header: "Registration Number",
+    accessor: "regno",
     Filter: ColumnFilter,
   },
   {
-    Header: "Email",
-    accessor: "email",
+    Header: "First Name",
+    accessor: "first_name",
     Filter: ColumnFilter,
   },
   {
-    Header: "Sex",
-    accessor: "sex",
+    Header: "Last Name",
+    accessor: "last_name",
     Filter: ColumnFilter,
   },
   {
-    Header: "Qualification",
-    accessor: "qualification",
+    Header: "Gender",
+    accessor: "gender",
     Filter: ColumnFilter,
   },
   {
-    Header: "Grade Level",
-    accessor: "gl",
+    Header: "Age",
+    accessor: "age",
     Filter: ColumnFilter,
   },
   {
-    Header: "Phone",
-    accessor: "phone",
+    Header: "Marital Status",
+    accessor: "marital_status",
+    Filter: ColumnFilter,
+  },
+  {
+    Header: "Occupation",
+    accessor: "occupation",
+    Filter: ColumnFilter,
+  },
+  {
+    Header: "State of Origin",
+    accessor: "storigin.state",
     Filter: ColumnFilter,
   },
   {
@@ -131,18 +146,88 @@ const myColumns = [
     Filter: ColumnFilter,
   },
   {
+    Header: "Case Type",
+    accessor: "case_type",
+    Filter: ColumnFilter,
+  },
+  {
+    Header: "Offence",
+    accessor: "offence",
+    Filter: ColumnFilter,
+  },
+  {
+    Header: "Complaints",
+    accessor: "complaints",
+    Filter: ColumnFilter,
+  },
+  {
+    Header: "Court",
+    accessor: "court",
+    Filter: ColumnFilter,
+  },
+  {
+    Header: "Case Number",
+    accessor: "case_no",
+    Filter: ColumnFilter,
+  },
+  {
+    Header: "Date Case Received",
+    accessor: "date_case_received",
+    Filter: ColumnFilter,
+  },
+  {
+    Header: "Date Case Granted",
+    accessor: "date_case_granted",
+    Filter: ColumnFilter,
+  },
+  {
+    Header: "Granted",
+    accessor: "granted",
+    Filter: ColumnFilter,
+  },
+  {
+    Header: "Eligible",
+    accessor: "eligible",
+    Filter: ColumnFilter,
+  },
+  {
+    Header: "Active Case",
+    accessor: "active_case",
+    Filter: ColumnFilter,
+  },
+  {
+    Header: "Counsel Assigned",
+    accessor: "counsel_assigned",
+    Filter: ColumnFilter,
+  },
+  {
+    Header: "Date Case Completed",
+    accessor: "date_case_completed",
+    Filter: ColumnFilter,
+  },
+  {
+    Header: "Completed Case",
+    accessor: "completed_case",
+    Filter: ColumnFilter,
+  },
+  {
+    Header: "Case Outcome",
+    accessor: "case_outcome",
+    Filter: ColumnFilter,
+  },
+  {
+    Header: "Resolution",
+    accessor: "resolution",
+    Filter: ColumnFilter,
+  },
+  {
     Header: "Centre",
     accessor: "centre.centre",
     Filter: ColumnFilter,
   },
   {
-    Header: "Role",
-    accessor: "role",
-    Filter: ColumnFilter,
-  },
-  {
-    Header: "Monthly Report",
-    accessor: "monthly_report",
+    Header: "Submited",
+    accessor: "submited",
     Filter: ColumnFilter,
   },
   {
@@ -154,7 +239,7 @@ const myColumns = [
       //console.log("cell value", cellInfo);
 
       return (
-        <a href={"/user/profile/" + cellInfo.cell.row.original.id}>
+        <a href={"/reports/monthly/" + cellInfo.cell.row.original.id}>
           <span>
             <FontAwesomeIcon icon={faEye} className="btn-site-theme" />
           </span>
@@ -171,11 +256,11 @@ const myColumns = [
       //console.log("cell value", cellInfo);
 
       return (
-        <a href={"/users/update/" + cellInfo.cell.row.original.id}>
+        <a href={"/reports/update/" + cellInfo.cell.row.original.id}>
           <span>
             <FontAwesomeIcon
               icon={faPenSquare}
-              size={50}
+              size={"lg"}
               className="btn-site-theme"
             />
           </span>
@@ -185,15 +270,24 @@ const myColumns = [
   },
 ];
 
-const UserTable = (props) => {
-  const { users } = props;
+const ReportTable = (props) => {
+  const { reports } = props;
   const { setAddUserFormActive, apiAction } = props.options;
-  console.log("inside UseTable", users);
+  console.log("inside UseTable", reports);
   const columns = useMemo(() => myColumns, []);
-  const data = useMemo(() => users, []);
+  const data = useMemo(() => reports, []);
+  const [dataToDownload, setDataToDownload] = useState([]);
+  const [csvLink, setCsvLink] = useState();
+  const [tableRef, setTableRef] = useState();
+
+  useEffect(() => console.log("date to download", dataToDownload), [
+    dataToDownload,
+  ]);
+
   //   const defaultColumn = useMemo(() => {
   //     return { Filter: ColumnFilter };
   //   }, []);
+
   const defaultColumn = React.useMemo(
     () => ({
       minWidth: 30,
@@ -203,19 +297,94 @@ const UserTable = (props) => {
     []
   );
 
-  const tableInstance = useTable(
-    {
-      columns: columns,
-      data: users,
-      defaultColumn,
-    },
-    useFilters,
-    useGlobalFilter,
-    useSortBy,
-    usePagination,
-    useBlockLayout
-    // useResizeColumns
-  );
+  function getExportFileBlob({ columns, data, fileType, fileName }) {
+    if (fileType === "csv") {
+      // CSV example
+      const headerNames = columns.map((col) => col.exportValue);
+      const csvString = Papa.unparse({ fields: headerNames, data });
+      return new Blob([csvString], { type: "text/csv" });
+    } else if (fileType === "xlsx") {
+      // XLSX example
+
+      const header = columns.map((c) => c.exportValue);
+      const compatibleData = data.map((row) => {
+        const obj = {};
+        header.forEach((col, index) => {
+          obj[col] = row[index];
+        });
+        return obj;
+      });
+
+      let wb = XLSX.utils.book_new();
+      let ws1 = XLSX.utils.json_to_sheet(compatibleData, {
+        header,
+      });
+      XLSX.utils.book_append_sheet(wb, ws1, "React Table Data");
+      XLSX.writeFile(wb, `${fileName}.xlsx`);
+
+      // Returning false as downloading of file is already taken care of
+      return false;
+    }
+    //PDF example
+    // if (fileType === "pdf") {
+    //   const headerNames = columns.map((column) => column.exportValue);
+    //   const doc = new JsPDF();
+    //   doc.autoTable({
+    //     head: [headerNames],
+    //     body: data,
+    //     margin: { top: 20 },
+    //     styles: {
+    //       minCellHeight: 9,
+    //       halign: "left",
+    //       valign: "center",
+    //       fontSize: 11,
+    //     },
+    //   });
+    //   doc.save(`${fileName}.pdf`);
+
+    //   return false;
+    // }
+
+    // Other formats goes here
+    return false;
+  }
+
+  //   const tableInstance = useTable(
+  //     {
+  //       columns: columns,
+  //       data: reports,
+  //       reactTableInstance,
+  //       defaultColumn,
+  //       getExportFileBlob,
+  //     },
+  //     useFilters,
+  //     useGlobalFilter,
+  //     useSortBy,
+  //     usePagination,
+  //     useBlockLayout,
+  //     useExportData
+
+  //     // useResizeColumns
+  //   );
+
+  //   const {
+  //     getTableProps,
+  //     getTableBodyProps,
+  //     headerGroups,
+  //     page,
+  //     nextPage,
+  //     previousPage,
+  //     canNextPage,
+  //     canPreviousPage,
+  //     prepareRow,
+  //     exportData,
+  //     pageOptions,
+  //     gotoPage,
+  //     pageCount,
+  //     setPageSize,
+  //     state,
+  //     setGlobalFilter,
+  //   } = tableInstance;
 
   const {
     getTableProps,
@@ -226,35 +395,69 @@ const UserTable = (props) => {
     previousPage,
     canNextPage,
     canPreviousPage,
-    prepareRow,
-    pageOptions,
+    state,
     gotoPage,
     pageCount,
     setPageSize,
-    state,
+    prepareRow,
+    pageOptions,
     setGlobalFilter,
-  } = tableInstance;
+    exportData,
+  } = useTable(
+    {
+      columns: columns,
+      data: reports,
+      defaultColumn,
+      getExportFileBlob,
+    },
+    useFilters,
+    useGlobalFilter,
+    useSortBy,
+    usePagination,
+    useExportData,
+    useBlockLayout
+
+    //     // useResizeColumns
+  );
 
   const { globalFilter, pageIndex, pageSize } = state;
 
   return (
     <>
+      {console.log(getTableProps.instance)}
       <CRow className="text-center mb-4 mt-1">
         <CCol>
-          <h1 className="text-center btn-site-theme">Users</h1>
+          <h1 className="text-center btn-site-theme">Monthly Reports</h1>
         </CCol>
       </CRow>
-      <CRow className="p-0 mb-2  text-left">
-        <CCol xl={6} style={{ paddingLeft: "2em" }}>
+      <CRow className="">
+        <CCol xl={5} style={{ paddingLeft: "2em" }}>
           <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} />
         </CCol>
-        <CCol xl={6} className="text-right">
+        <CCol xl={7} className="text-right">
+          <button
+            className="btn  px-4 btn-site-theme-bg"
+            disabled={apiAction}
+            onClick={() => {
+              exportData("xlsx", false);
+            }}
+          >
+            Export Excel (XLS)
+          </button>{" "}
+          <button
+            className="btn  px-4 btn-site-theme-bg"
+            onClick={() => {
+              exportData("csv", false);
+            }}
+          >
+            Export Excel (CSV)
+          </button>{" "}
           <button
             className="btn  px-4 btn-site-theme-bg"
             disabled={apiAction}
             onClick={() => setAddUserFormActive((prev) => (prev = !prev))}
           >
-            Add User
+            Add Report
           </button>
         </CCol>
       </CRow>
@@ -354,4 +557,4 @@ const UserTable = (props) => {
   );
 };
 
-export default UserTable;
+export default ReportTable;

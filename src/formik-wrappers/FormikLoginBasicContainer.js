@@ -1,28 +1,25 @@
 import React, { useState } from "react";
-import { Formik, Form} from "formik";
+import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import FormikControl from "./FormikControl";
 import { CCol, CRow, CButton } from "@coreui/react";
 import AuthService from "../services/auth.service";
-import { useHistory,useLocation,Redirect } from "react-router-dom";
+import { useHistory, useLocation, Redirect } from "react-router-dom";
 
 const initialValues = {
   email: "",
   password: "",
 };
 
-
-
 const validationSchema = Yup.object({
   email: Yup.string().email("Invalid Mail Format").required("required"),
   password: Yup.string().required("required"),
 });
 
-const FormikLoginBasicContainer=()=> {
-      
+const FormikLoginBasicContainer = () => {
   const history = useHistory();
-  const location= useLocation()
-  
+  const location = useLocation();
+
   const { from } = location.state || { from: { pathname: "/dashboard" } };
   const [apiError, setApiError] = useState(null);
 
@@ -32,9 +29,8 @@ const FormikLoginBasicContainer=()=> {
     onSubmitProps.setSubmitting(true);
     AuthService.login(values.email, values.password).then(
       () => {
-    
-           history.push("/dashboard");
-        
+        history.push("/dashboard");
+
         //window.location.reload();
       },
       (error) => {
@@ -53,7 +49,7 @@ const FormikLoginBasicContainer=()=> {
               setApiError("Invalid Username or Password");
           }
         } else {
-            onSubmitProps.setSubmitting(false);
+          onSubmitProps.setSubmitting(false);
           setApiError(error.message);
         }
         onSubmitProps.setSubmitting(false);
@@ -91,10 +87,10 @@ const FormikLoginBasicContainer=()=> {
 
             {apiError !== null ? (
               <CRow>
-              <CCol xs="12">
-                <div class="alert alert-danger" role="alert">
-                  {apiError}
-                </div>
+                <CCol xs="12">
+                  <div class="alert alert-danger" role="alert">
+                    {apiError}
+                  </div>
                 </CCol>
               </CRow>
             ) : (
@@ -103,23 +99,26 @@ const FormikLoginBasicContainer=()=> {
 
             <CRow>
               <CCol xs="6">
-              
-                  { 
-                    formik.isSubmitting ? 
-                    <button className="btn btn-primary px-4"  disabled={formik.isSubmitting}>
-                      <span
-                        className="spinner-grow spinner-grow-sm"
-                        role="status"
-                        aria-hidden="true"
-                      ></span>
-                      Loading...
-                    </button> : 
-                    <button className="btn btn-primary px-4"  disabled={formik.isSubmitting}>
-                    
-                      Login
-                    </button>
-                  }
-                
+                {formik.isSubmitting ? (
+                  <button
+                    className="btn btn-site-theme-bg px-4"
+                    disabled={formik.isSubmitting}
+                  >
+                    <span
+                      className="spinner-grow spinner-grow-sm"
+                      role="status"
+                      aria-hidden="true"
+                    ></span>
+                    Loading...
+                  </button>
+                ) : (
+                  <button
+                    className="btn btn-site-theme-bg px-4"
+                    disabled={formik.isSubmitting}
+                  >
+                    Login
+                  </button>
+                )}
               </CCol>
               <CCol xs="6" className="text-right">
                 <CButton color="link" className="px-0">
@@ -132,6 +131,6 @@ const FormikLoginBasicContainer=()=> {
       }}
     </Formik>
   );
-}
+};
 
 export default FormikLoginBasicContainer;

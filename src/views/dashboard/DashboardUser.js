@@ -47,59 +47,73 @@ const DashboardUser = () => {
                 </CRow>
               </CCardHeader>
               <CCardBody>
-                <p>
-                  <b className="font-weight-bold">Name:</b> {user.names}
+                <p className="shadow p-3">
+                  <b className="font-weight-bold lac-site-theme">Name:</b>{" "}
+                  {user.names}
                 </p>
-                <p>
-                  <b className="font-weight-bold">Email:</b> {user.email}
+                <p className="shadow p-3">
+                  <b className="font-weight-bold lac-site-theme">Email:</b>{" "}
+                  {user.email}
                 </p>
-                <p>
-                  <b className="font-weight-bold">Sex:</b> {user.sex}
+                <p className="shadow p-3">
+                  <b className="font-weight-bold lac-site-theme">Sex:</b>{" "}
+                  {user.sex}
                 </p>
-                <p>
-                  <b className="font-weight-bold">Status:</b> {user.status}
+                <p className="shadow p-3">
+                  <b className="font-weight-bold lac-site-theme">Status:</b>{" "}
+                  {user.status}
                 </p>
-                <p>
-                  <b className="font-weight-bold">Qualification:</b>{" "}
+                <p className="shadow p-3">
+                  <b className="font-weight-bold lac-site-theme">
+                    Qualification:
+                  </b>{" "}
                   {user.qualification}
                 </p>
-                <p>
-                  <b className="font-weight-bold">GL:</b> {user.gl}
+                <p className="shadow p-3">
+                  <b className="font-weight-bold lac-site-theme">GL:</b>{" "}
+                  {user.gl}
                 </p>
 
-                <p>
-                  <b className="font-weight-bold">Phone:</b> {user.phone}
+                <p className="shadow p-3">
+                  <b className="font-weight-bold lac-site-theme">Phone:</b>{" "}
+                  {user.phone}
                 </p>
-                <p>
-                  <b className="font-weight-bold">Zone:</b>{" "}
+                <p className="shadow p-3">
+                  <b className="font-weight-bold lac-site-theme">Zone:</b>{" "}
                   {user.zone !== undefined &&
                     user.zone_id !== 0 &&
                     user.zone.zone}
                   {user.zone == undefined && "NA"}
                 </p>
-                <p>
-                  <b className="font-weight-bold">State:</b>{" "}
+                <p className="shadow p-3">
+                  <b className="font-weight-bold lac-site-theme">State:</b>{" "}
                   {user.state !== undefined &&
                     user.state_id !== 0 &&
                     user.state.state}
                   {user.state == undefined && "NA"}
                 </p>
-                <p>
-                  <b className="font-weight-bold">Centre:</b>{" "}
+                <p className="shadow p-3">
+                  <b className="font-weight-bold lac-site-theme">Centre:</b>{" "}
                   {user.centre !== undefined &&
                     user.centre_id !== 0 &&
                     user.centre.centre}
                   {user.centre == undefined && "NA"}
                 </p>
 
-                <p>
-                  <b className="font-weight-bold">Registered:</b>{" "}
+                <p className="shadow p-3">
+                  <b className="font-weight-bold lac-site-theme">Registered:</b>{" "}
                   {user.registered}
                 </p>
 
-                <a href={`/users/update/${id}`}>
+                <a href={`/users/update/${id}`} className="m-2">
                   <button className="btn btn-site-theme-bg px-4 ">
                     Edit User
+                  </button>
+                </a>
+
+                <a href="/users/add">
+                  <button className="btn btn-site-theme-bg px-4 ">
+                    Go Back
                   </button>
                 </a>
               </CCardBody>

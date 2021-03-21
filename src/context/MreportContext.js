@@ -384,21 +384,22 @@ const Provider = (props) => {
     //alert("Hi there man")
 
     axios
-      .get(API_URL + "posts", { headers: authHeader() })
+      .get(API_URL + "report/fetch-monthly-report-all-or-user", {
+        headers: authHeader(),
+      })
       .then((response) => {
         setReports((prevreport) => {
-          return [...prevreport, ...response.data.data.data.data];
+          return [...prevreport, ...response.data.reports];
         });
 
-        setPagination((prevreport) => {
-          return { ...prevreport, ...response.data.data.data };
-        });
+        // setPagination((prevreport) => {
+        //   return { ...prevreport, ...response.data.data.data };
+        // });
 
-        !response.data.data.data.data.length &&
-          setFetchingFailMsg("No reports found");
+        !response.data.reports.length && setFetchingFailMsg("No reports found");
 
         setFetching(false);
-        console.log("post response all reports", response.data.data.data);
+        console.log("post response all reports", response.data.reports);
         setApiAction(false);
       })
       .catch((error) => {

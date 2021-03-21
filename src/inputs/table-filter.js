@@ -11,7 +11,7 @@ export const GlobalFilter = ({ filter, setFilter }) => {
   return (
     <span>
       <input
-        placeholder="Search entire table.."
+        placeholder="Search table.."
         className="form-control"
         value={value || ""}
         onChange={(e) => {
