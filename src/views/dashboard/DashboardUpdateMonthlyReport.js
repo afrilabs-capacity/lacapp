@@ -1,4 +1,5 @@
 import React, { useEffect, useContext, useState, lazy } from "react";
+import { useParams, useLocation } from "react-router-dom";
 import { useFormik } from "formik";
 import TextError from "../../formik-wrappers/TextError";
 import ReportGender from "../../inputs/report-gender";
@@ -50,7 +51,6 @@ import MreportProvider from "../../context/MreportContext";
 // import ArticleCategory from "../../inputs/article-category"
 // import ToastMe from "../../alerts/toaster"
 // import ModalMe from "../../modals/image-upload-modal"
-import { useParams, useLocation } from "react-router-dom";
 // import Paginations from "../../pagination/pagination"
 import LoginModal from "../../modals/login-modal";
 // import UserRole from '../../inputs/user-role'
@@ -82,7 +82,7 @@ const Styles = {
   },
 };
 
-const DashboardAddReport = (props) => {
+const DashboardUpdateMonthlyReport = (props) => {
   const { id } = useParams();
   const location = useLocation();
   const {
@@ -96,12 +96,13 @@ const DashboardAddReport = (props) => {
     modal,
     setModal,
     report,
-    updateReport,
+    updateReportApi,
     apiAction,
     fetchMonthlyConfigApi,
     caseType,
     monthlyReportCanReport,
-    publishReportApi,
+    updateMonthlyReportApi,
+    fetchReportByIdApi,
   } = useContext(MreportProvider.Context);
 
   const [dateCaseReceived, setDateCaseReceived] = useState("");
@@ -109,32 +110,8 @@ const DashboardAddReport = (props) => {
   const [dateCaseCompleted, setDateCaseCompleted] = useState("");
 
   const formik = useFormik({
-    initialValues: {
-      regno: "",
-      first_name: "",
-      last_name: "",
-      gender: "",
-      age: "",
-      marital_status: "",
-      occupation: "",
-      state_of_origin: "",
-      case_type: "",
-      offence: "",
-      complaints: "",
-      court: "",
-      case_no: "",
-      date_case_received: "",
-      date_case_granted: "",
-      granted: "",
-      eligible: "",
-      active_case: "",
-      counsel_assigned: "",
-      date_case_completed: "",
-      completed_case: "",
-      case_outcome: "",
-      resolution: "",
-    },
-    //enableReinitialize:true,
+    enableReinitialize: true,
+    initialValues: report !== null ? report : {},
     validationSchema: Yup.object({
       regno: Yup.string()
         .required()
@@ -151,10 +128,14 @@ const DashboardAddReport = (props) => {
       offence: Yup.string().when("case_type", {
         is: (val) => val == "Criminal",
         then: Yup.string().required("Field required"),
+        is: (val) => val == "Civil",
+        then: Yup.string().nullable(),
       }),
       complaints: Yup.string().when("case_type", {
         is: (val) => val == "Civil",
         then: Yup.string().required("Field required"),
+        is: (val) => val == "Criminal",
+        then: Yup.string().nullable(),
       }),
       state_of_origin: Yup.string().required("Field required"),
       court: Yup.string().required("Field required"),
@@ -186,8 +167,6 @@ const DashboardAddReport = (props) => {
     }),
 
     onSubmit: (values) => {
-      // const startDateStr = moment(startDate).format("YYYY-MM-DD HH:mm:ss");
-      // const endDateStr = moment(endDate).format("YYYY-MM-DD HH:mm:ss");
       values.date_case_received = moment(dateCaseReceived).format(
         "YYYY-MM-DD HH:mm:ss"
       );
@@ -197,7 +176,7 @@ const DashboardAddReport = (props) => {
       values.date_case_completed = moment(dateCaseCompleted).format(
         "YYYY-MM-DD HH:mm:ss"
       );
-      publishReportApi(values);
+      updateReportApi(values);
       console.log("values", values);
     },
     // onChange:values=>{
@@ -206,9 +185,30 @@ const DashboardAddReport = (props) => {
   });
 
   //   console.log("Form Values",formik)
-
   useEffect(() => {
     fetchMonthlyConfigApi();
+  }, []);
+
+  useEffect(() => {
+    // report.date_case_Received &&
+    report.date_case_received !== undefined &&
+      setDateCaseReceived(new Date(report.date_case_received));
+  }, [report]);
+
+  useEffect(() => {
+    // report.date_case_Received &&
+    report.date_case_granted !== undefined &&
+      setDateCaseGranted(new Date(report.date_case_granted));
+  }, [report]);
+
+  useEffect(() => {
+    // report.date_case_Received &&
+    report.date_case_completed !== undefined &&
+      setDateCaseCompleted(new Date(report.date_case_completed));
+  }, [report]);
+
+  useEffect(() => {
+    fetchReportByIdApi(id);
   }, []);
 
   useEffect(() => {
@@ -248,7 +248,6 @@ const DashboardAddReport = (props) => {
                             name="regno"
                             placeholder="Enter your name"
                             onChange={(e) => {
-                              updateReport("regno", e.target.value);
                               return formik.handleChange(e);
                             }}
                             onBlur={formik.handleBlur}
@@ -275,7 +274,6 @@ const DashboardAddReport = (props) => {
                             type="text"
                             placeholder="Enter first name here.."
                             onChange={(e) => {
-                              updateReport("first_name", e.target.value);
                               return formik.handleChange(e);
                             }}
                             onBlur={formik.handleBlur}
@@ -302,7 +300,6 @@ const DashboardAddReport = (props) => {
                             name="last_name"
                             placeholder="Enter last name here.."
                             onChange={(e) => {
-                              updateReport("last_name", e.target.value);
                               return formik.handleChange(e);
                             }}
                             onBlur={formik.handleBlur}
@@ -510,7 +507,6 @@ const DashboardAddReport = (props) => {
                             name="case_no"
                             placeholder="Enter case number"
                             onChange={(e) => {
-                              updateReport("case_no", e.target.value);
                               return formik.handleChange(e);
                             }}
                             onBlur={formik.handleBlur}
@@ -544,7 +540,7 @@ const DashboardAddReport = (props) => {
                             autoComplete="off"
                             onChange={(date, e) => {
                               console.log("inside date", date);
-                              updateReport("date_case_received", date);
+
                               setDateCaseReceived(date);
                               formik.setFieldValue("date_case_received", date);
                               formik.handleChange(e);
@@ -579,7 +575,7 @@ const DashboardAddReport = (props) => {
                             autoComplete="off"
                             onChange={(date, e) => {
                               console.log("inside date", date);
-                              updateReport("date_case_granted", date);
+
                               setDateCaseGranted(date);
                               formik.setFieldValue("date_case_granted", date);
                               formik.handleChange(e);
@@ -687,7 +683,6 @@ const DashboardAddReport = (props) => {
                             name="case_no"
                             placeholder="Enter case number"
                             onChange={(e) => {
-                              updateReport("case_no", e.target.value);
                               return formik.handleChange(e);
                             }}
                             onBlur={formik.handleBlur}
@@ -721,7 +716,7 @@ const DashboardAddReport = (props) => {
                             autoComplete="off"
                             onChange={(date, e) => {
                               console.log("inside date", date);
-                              updateReport("date_case_completed", date);
+
                               setDateCaseCompleted(date);
                               formik.setFieldValue("date_case_completed", date);
                               formik.handleChange(e);
@@ -820,7 +815,7 @@ const DashboardAddReport = (props) => {
                             type="submit"
                             disabled={apiAction}
                           >
-                            Add
+                            Update
                           </button>
                         )}
                         <div style={{ color: "red" }} className="mt-2">
@@ -868,4 +863,4 @@ const DashboardAddReport = (props) => {
   );
 };
 
-export default DashboardAddReport;
+export default DashboardUpdateMonthlyReport;

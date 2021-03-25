@@ -12,7 +12,7 @@ const UserCentre = (props) => {
           return formik.handleChange(e);
         }}
         onBlur={formik.handleBlur}
-        value={formik.values.centre_id}
+        value={formik.values.centre_id > 0 ? formik.values.centre_id : ""}
         className="form-control"
         name={name}
       >

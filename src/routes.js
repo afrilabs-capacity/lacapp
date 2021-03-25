@@ -89,6 +89,26 @@ const DashboardMonthlyReports = React.lazy(() =>
   import("./views/dashboard/DashboardMonthlyReports")
 );
 
+const DashboardUpdateMonthlyReport = React.lazy(() =>
+  import("./views/dashboard/DashboardUpdateMonthlyReport")
+);
+
+const DashboardDailyReports = React.lazy(() =>
+  import("./views/dashboard/DashboardDailyReports")
+);
+
+const DashboardDailyReport = React.lazy(() =>
+  import("./views/dashboard/DashboardDailyReport")
+);
+
+const DashboardPdssReports = React.lazy(() =>
+  import("./views/dashboard/DashboardPdssReports")
+);
+
+const DashboardPdssReport = React.lazy(() =>
+  import("./views/dashboard/DashboardPdssReport")
+);
+
 const CoreUIIcons = React.lazy(() =>
   import("./views/icons/coreui-icons/CoreUIIcons")
 );
@@ -255,6 +275,12 @@ const routes = [
     component: DashboardMonthlyReport,
   },
   {
+    path: "/reports/monthly/update/:id",
+    exact: true,
+    name: "User",
+    component: DashboardUpdateMonthlyReport,
+  },
+  {
     path: "/reports/checkpoint",
     exact: true,
     name: "User",
@@ -265,6 +291,31 @@ const routes = [
     exact: true,
     name: "User",
     component: DashboardMonthlyReports,
+  },
+  {
+    path: "/reports/daily",
+    exact: true,
+    name: "User",
+    component: DashboardDailyReports,
+  },
+  {
+    path: "/reports/daily/:id",
+    exact: true,
+    name: "User",
+    component: DashboardDailyReport,
+  },
+
+  {
+    path: "/reports/pdss",
+    exact: true,
+    name: "User",
+    component: DashboardPdssReports,
+  },
+  {
+    path: "/reports/pdss/:id",
+    exact: true,
+    name: "User",
+    component: DashboardPdssReport,
   },
 ];
 

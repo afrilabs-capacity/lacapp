@@ -14,7 +14,7 @@ const UserState = (props) => {
           return formik.handleChange(e);
         }}
         onBlur={formik.handleBlur}
-        value={formik.values.state_id}
+        value={formik.values.state_id > 0 ? formik.values.state_id : ""}
         className="form-control"
         name={name}
       >

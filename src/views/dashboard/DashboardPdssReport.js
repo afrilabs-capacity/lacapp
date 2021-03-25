@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from "react";
 import { CCard, CCardBody, CCardHeader, CCol, CRow } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
-import MreportProvider from "../../context/MreportContext";
+import PdssProvider from "../../context/PdssContext";
 import LoginModal from "../../modals/login-modal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye } from "@fortawesome/free-solid-svg-icons";
@@ -22,10 +22,10 @@ const styles = {
   },
 };
 
-const DashboardReportMonthly = () => {
+const DashboardReportPdss = () => {
   const { id } = useParams();
 
-  const { fetchReportByIdApi, report } = useContext(MreportProvider.Context);
+  const { fetchReportByIdApi, report } = useContext(PdssProvider.Context);
 
   useEffect(() => {
     fetchReportByIdApi(id);
@@ -41,18 +41,14 @@ const DashboardReportMonthly = () => {
                 <CRow className="mt-4">
                   <CCol>
                     <h1 className="text-center btn-site-theme">
-                      {report !== undefined ? "Reg No #" + report.regno : ""}
+                      {report !== undefined
+                        ? report.first_name + " " + report.last_name
+                        : ""}
                     </h1>
                   </CCol>
                 </CRow>
               </CCardHeader>
               <CCardBody>
-                <p className="shadow p-3">
-                  <b className="font-weight-bold lac-site-theme">
-                    Registration Number:
-                  </b>{" "}
-                  {report.regno}
-                </p>
                 <p className="shadow p-3">
                   <b className="font-weight-bold lac-site-theme">First Name:</b>{" "}
                   {report.first_name}
@@ -66,90 +62,66 @@ const DashboardReportMonthly = () => {
                   {report.gender}
                 </p>
                 <p className="shadow p-3">
-                  <b className="font-weight-bold lac-site-theme">Age:</b>{" "}
-                  {report.age}
-                </p>
-                <p className="shadow p-3">
                   <b className="font-weight-bold lac-site-theme">
                     Marital Status:
                   </b>{" "}
                   {report.marital_status}
                 </p>
+
                 <p className="shadow p-3">
                   <b className="font-weight-bold lac-site-theme">Occupation:</b>{" "}
                   {report.occupation}
                 </p>
 
-                <p className="shadow p-3">
+                {/* <p className="shadow p-3">
                   <b className="font-weight-bold lac-site-theme">
                     State of Origin:
                   </b>{" "}
                   {report.storigin !== undefined && report.storigin.state}
                   {report.storigin == undefined && "NA"}
+                </p> */}
+                <p className="shadow p-3">
+                  <b className="font-weight-bold lac-site-theme">Offence:</b>{" "}
+                  {report.offence}
                 </p>
 
                 <p className="shadow p-3">
                   <b className="font-weight-bold lac-site-theme">Case Type:</b>{" "}
                   {report.case_type}
                 </p>
-                <p className="shadow p-3">
-                  <b className="font-weight-bold lac-site-theme">Court:</b>{" "}
-                  {report.court}
-                </p>
-                <p className="shadow p-3">
-                  <b className="font-weight-bold lac-site-theme">
-                    Case Number:
-                  </b>{" "}
-                  {report.case_no}
-                </p>
-                <p className="shadow p-3">
-                  <b className="font-weight-bold lac-site-theme">
-                    Date Case Received:
-                  </b>{" "}
-                  {report.date_case_received_human}
-                </p>
-                <p className="shadow p-3">
-                  <b className="font-weight-bold lac-site-theme">
-                    Date Case Granted:
-                  </b>{" "}
-                  {report.date_case_granted_human}
-                </p>
-                <p className="shadow p-3">
-                  <b className="font-weight-bold lac-site-theme">Granted:</b>{" "}
-                  {report.granted}
-                </p>
-                <p className="shadow p-3">
-                  <b className="font-weight-bold lac-site-theme">Eligible:</b>{" "}
-                  {report.eligible}
-                </p>
-                <p className="shadow p-3">
-                  <b className="font-weight-bold lac-site-theme">
-                    Active Case:
-                  </b>{" "}
-                  {report.active_case}
-                </p>
-                <p className="shadow p-3">
-                  <b className="font-weight-bold lac-site-theme">Zone:</b>{" "}
-                  {report.zone !== undefined &&
-                    report.zone_id !== 0 &&
-                    report.zone.zone}
-                  {report.zone == undefined && "NA"}
-                </p>
-                <p className="shadow p-3">
-                  <b className="font-weight-bold lac-site-theme">State:</b>{" "}
-                  {report.state !== undefined &&
-                    report.state_id !== 0 &&
-                    report.state.state}
-                  {report.state == undefined && "NA"}
-                </p>
-                <p className="shadow p-3">
-                  <b className="font-weight-bold lac-site-theme">Centre:</b>{" "}
-                  {report.centre !== undefined &&
-                    report.centre_id !== 0 &&
-                    report.centre.centre}
-                  {report.centre == undefined && "NA"}
-                </p>
 
+                <p className="shadow p-3">
+                  <b className="font-weight-bold lac-site-theme">Offence:</b>{" "}
+                  {report.offence == null ? "NA" : report.offence}
+                </p>
+                <p className="shadow p-3">
+                  <b className="font-weight-bold lac-site-theme">
+                    Place of Detention:
+                  </b>{" "}
+                  {report.pod}
+                </p>
+                <p className="shadow p-3">
+                  <b className="font-weight-bold lac-site-theme">
+                    Date Arrested:
+                  </b>{" "}
+                  {report.date_arrested}
+                </p>
+                <p className="shadow p-3">
+                  <b className="font-weight-bold lac-site-theme">
+                    Date Released:
+                  </b>{" "}
+                  {report.date_released}
+                </p>
+                <p className="shadow p-3">
+                  <b className="font-weight-bold lac-site-theme">Duration:</b>{" "}
+                  {report.duration}
+                </p>
+                <p className="shadow p-3">
+                  <b className="font-weight-bold lac-site-theme">
+                    Date Arrested:
+                  </b>{" "}
+                  {report.date_arrested}
+                </p>
                 <p className="shadow p-3">
                   <b className="font-weight-bold lac-site-theme">
                     Counsel Assigned:
@@ -157,19 +129,57 @@ const DashboardReportMonthly = () => {
                   {report.counsel_assigned}
                 </p>
 
-                <p className="shadow p-3">
-                  <b className="font-weight-bold lac-site-theme">
-                    Date Case Completed:
-                  </b>{" "}
-                  {report.date_case_completed_human}
-                </p>
+                <br />
 
-                <a href={`/reports/monthly/update/${id}`} className="m-2">
+                {report.user !== undefined && (
+                  <>
+                    <h1 className="text-center btn-site-theme">
+                      Lawyer Information
+                    </h1>
+
+                    <p className="shadow p-3">
+                      <b className="font-weight-bold lac-site-theme">
+                        Submited By:
+                      </b>{" "}
+                      {report.user !== undefined && report.user.names}
+                    </p>
+
+                    <p className="shadow p-3">
+                      <b className="font-weight-bold lac-site-theme">Zone:</b>{" "}
+                      {report.user !== undefined &&
+                        report.user.zone !== null &&
+                        report.user.zone.zone}
+                      {report.user !== undefined &&
+                        report.user.zone === null &&
+                        "N/A"}
+                    </p>
+                    <p className="shadow p-3">
+                      <b className="font-weight-bold lac-site-theme">State:</b>{" "}
+                      {report.user !== undefined &&
+                        report.user.state !== null &&
+                        report.user.state.state}
+                      {report.user !== undefined &&
+                        report.user.state === null &&
+                        "N/A"}
+                    </p>
+                    <p className="shadow p-3">
+                      <b className="font-weight-bold lac-site-theme">Centre:</b>{" "}
+                      {report.user !== undefined &&
+                        report.user.centre !== null &&
+                        report.user.centre.centre}
+                      {report.user !== undefined &&
+                        report.user.centre === null &&
+                        "N/A"}
+                    </p>
+                  </>
+                )}
+
+                {/* <a href={`/reports//update/${id}`} className="m-2">
                   <button className="btn btn-site-theme-bg px-4 ">
                     Edit Report
                   </button>
-                </a>
-                <a href="/reports/monthly">
+                </a> */}
+                <a href="/reports/pdss">
                   <button className="btn btn-site-theme-bg px-4 ">
                     Go Back
                   </button>
@@ -177,7 +187,7 @@ const DashboardReportMonthly = () => {
               </CCardBody>
             </CCard>
           </CCol>
-          <LoginModal context={MreportProvider.Context} />
+          <LoginModal context={PdssProvider.Context} />
         </CRow>
       ) : (
         <h3 className="mb-4">Loading..</h3>
@@ -186,4 +196,4 @@ const DashboardReportMonthly = () => {
   );
 };
 
-export default DashboardReportMonthly;
+export default DashboardReportPdss;

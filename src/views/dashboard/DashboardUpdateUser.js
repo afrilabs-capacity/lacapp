@@ -68,13 +68,13 @@ const DashboardUpdateUser = () => {
   useEffect(() => {
     //fetchUsersApi();
     fetchUserByIdApi(id);
-    fetchStatesApi(user);
+    //fetchStatesApi(user);
     fetchZonesApi();
   }, []);
 
   useEffect(() => {
-    fetchStatesApi(user.zone_id);
-    fetchCentresApi(user.state_id);
+    user.zone_id > 0 && fetchStatesApi(user.zone_id);
+    user.state_id > 0 && fetchCentresApi(user.state_id);
   }, [user]);
 
   const Styles = {
@@ -102,7 +102,7 @@ const DashboardUpdateUser = () => {
     initialValues: user,
     validationSchema: Yup.object({
       names: Yup.string()
-        .max(15, "Must be 7 characters or less")
+        //.max(15, "Must be 7 characters or less")
         .required("Name field required"),
       email: Yup.string().email("Invalid email address").required("Required"),
       status: Yup.string().required("Required"),

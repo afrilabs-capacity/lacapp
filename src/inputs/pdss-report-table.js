@@ -95,8 +95,8 @@ const Styles = styled.div`
 
 const myColumns = [
   {
-    Header: "Registration Number",
-    accessor: "regno",
+    Header: "Submited By",
+    accessor: "user.names",
     Filter: ColumnFilter,
   },
   {
@@ -115,84 +115,40 @@ const myColumns = [
     Filter: ColumnFilter,
   },
   {
-    Header: "Age",
-    accessor: "age",
-    Filter: ColumnFilter,
-  },
-  {
     Header: "Marital Status",
     accessor: "marital_status",
     Filter: ColumnFilter,
   },
+
   {
     Header: "Occupation",
     accessor: "occupation",
     Filter: ColumnFilter,
   },
-  {
-    Header: "State of Origin",
-    accessor: "storigin.state",
-    Filter: ColumnFilter,
-  },
-  {
-    Header: "Zone",
-    accessor: "zone.zone",
-    Filter: ColumnFilter,
-    width: 500,
-  },
-  {
-    Header: "State",
-    accessor: "state.state",
-    Filter: ColumnFilter,
-  },
-  {
-    Header: "Case Type",
-    accessor: "case_type",
-    Filter: ColumnFilter,
-  },
+
   {
     Header: "Offence",
     accessor: "offence",
     Filter: ColumnFilter,
   },
   {
-    Header: "Complaints",
-    accessor: "complaints",
+    Header: "Place of Detention",
+    accessor: "pod",
     Filter: ColumnFilter,
   },
   {
-    Header: "Court",
-    accessor: "court",
+    Header: "Date Arrested",
+    accessor: "date_arrested",
     Filter: ColumnFilter,
   },
   {
-    Header: "Case Number",
-    accessor: "case_no",
+    Header: "Date Released",
+    accessor: "date_released",
     Filter: ColumnFilter,
   },
   {
-    Header: "Date Case Received",
-    accessor: "date_case_received_human",
-    Filter: ColumnFilter,
-  },
-  {
-    Header: "Date Case Granted",
-    accessor: "date_case_granted_human",
-    Filter: ColumnFilter,
-  },
-  {
-    Header: "Granted",
-    accessor: "granted",
-    Filter: ColumnFilter,
-  },
-  {
-    Header: "Eligible",
-    accessor: "eligible",
-    Filter: ColumnFilter,
-  },
-  {
-    Header: "Active Case",
-    accessor: "active_case",
+    Header: "Duration",
+    accessor: "duration",
     Filter: ColumnFilter,
   },
   {
@@ -200,31 +156,7 @@ const myColumns = [
     accessor: "counsel_assigned",
     Filter: ColumnFilter,
   },
-  {
-    Header: "Date Case Completed",
-    accessor: "date_case_completed_human",
-    Filter: ColumnFilter,
-  },
-  {
-    Header: "Completed Case",
-    accessor: "completed_case",
-    Filter: ColumnFilter,
-  },
-  {
-    Header: "Case Outcome",
-    accessor: "case_outcome",
-    Filter: ColumnFilter,
-  },
-  {
-    Header: "Resolution",
-    accessor: "resolution",
-    Filter: ColumnFilter,
-  },
-  {
-    Header: "Centre",
-    accessor: "centre.centre",
-    Filter: ColumnFilter,
-  },
+
   {
     Header: "Submited",
     accessor: "submited",
@@ -239,7 +171,7 @@ const myColumns = [
       //console.log("cell value", cellInfo);
 
       return (
-        <a href={"/reports/monthly/" + cellInfo.cell.row.original.id}>
+        <a href={"/reports/pdss/" + cellInfo.cell.row.original.id}>
           <span>
             <FontAwesomeIcon icon={faEye} className="btn-site-theme" />
           </span>
@@ -247,30 +179,9 @@ const myColumns = [
       );
     },
   },
-  {
-    Header: "Edit",
-    accessor: "",
-    Filter: ColumnFilter,
-    disableFilters: true,
-    Cell: (cellInfo) => {
-      //console.log("cell value", cellInfo);
-
-      return (
-        <a href={"/reports/monthly/update/" + cellInfo.cell.row.original.id}>
-          <span>
-            <FontAwesomeIcon
-              icon={faPenSquare}
-              size={"lg"}
-              className="btn-site-theme"
-            />
-          </span>
-        </a>
-      );
-    },
-  },
 ];
 
-const ReportTable = (props) => {
+const PdssTable = (props) => {
   const { reports } = props;
   const { setAddUserFormActive, apiAction } = props.options;
   console.log("inside UseTable", reports);
@@ -427,7 +338,8 @@ const ReportTable = (props) => {
       {console.log(getTableProps.instance)}
       <CRow className="text-center mb-4 mt-1">
         <CCol>
-          <h1 className="text-center btn-site-theme">Monthly Reports</h1>
+          <h1 className="text-center btn-site-theme">PDSS Reports</h1>
+          {/* <p className="btn-site-theme">Reports By You</p> */}
         </CCol>
       </CRow>
       <CRow className="">
@@ -452,15 +364,6 @@ const ReportTable = (props) => {
           >
             Export Excel (CSV)
           </button>{" "}
-          <a href="/report/add">
-            <button
-              className="btn  px-4 btn-site-theme-bg"
-              disabled={apiAction}
-              onClick={() => setAddUserFormActive((prev) => (prev = !prev))}
-            >
-              Add Report
-            </button>
-          </a>
         </CCol>
       </CRow>
 
@@ -559,4 +462,4 @@ const ReportTable = (props) => {
   );
 };
 
-export default ReportTable;
+export default PdssTable;

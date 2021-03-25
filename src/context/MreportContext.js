@@ -72,7 +72,7 @@ const Provider = (props) => {
   } = props;
 
   // Use State to keep the values
-  const [report, setReport] = useState(initialreport);
+  const [report, setReport] = useState({});
   const [caseType, setCaseType] = useState("");
   const [reports, setReports] = useState([]);
   const [counsels, setCounsels] = useState([]);
@@ -204,22 +204,23 @@ const Provider = (props) => {
       });
   };
 
-  const updateReportApi = () => {
+  const updateReportApi = (data) => {
     setLoginAction(initialLoginAction);
     setAuthModal(false);
     setApiAction(true);
+    setMonthlyReportCanReport(true);
 
     axios
       .request({
         method: "post",
         headers: authHeader(),
-        url: API_URL + "post/update",
-        data: report,
+        url: API_URL + "report/monthly-report-update",
+        data: data,
       })
       .then((response) => {
-        setEditMode("update");
+        //setEditMode("updated");
         alert.show("report Updated", { type: "success" });
-        console.log("post response", response.data.data.data.id);
+        //console.log("post response", response.data.data.data.id);
         setApiAction(false);
       })
       .catch((error) => {
@@ -239,10 +240,22 @@ const Provider = (props) => {
                 break;
               case 401:
                 //alert.show("Token error",{type:'notice'})
-                setAuthModal(true);
-                // setLoginAction(prevreport=>{
-                //   return {...prevreport,func:validatereport}
-                // })
+                error.response.data.code == "402" &&
+                  alert.show(error.response.data.status);
+
+                // error.response.data.code == "402" &&
+                //   setMonthlyReportCanReport(false);
+
+                if (!error.response.data.code) {
+                  setAuthModal(true);
+                  setLoginAction((prevreport) => {
+                    return {
+                      ...prevreport,
+                      func: updateReportApi,
+                      params: data,
+                    };
+                  });
+                }
                 break;
               default:
                 !error.response
@@ -262,6 +275,7 @@ const Provider = (props) => {
     setLoginAction(initialLoginAction);
     setAuthModal(false);
     setApiAction(true);
+    setReport({});
 
     authHeader() !== "" &&
       axios
@@ -286,14 +300,18 @@ const Provider = (props) => {
                   break;
                 case 401:
                   //alert.show("Token error",{type:'notice'})
-                  setAuthModal(true);
-                  setLoginAction((prevreport) => {
-                    return {
-                      ...prevreport,
-                      func: fetchReportByIdApi,
-                      params: id,
-                    };
-                  });
+                  error.response.data.code == "402" &&
+                    alert.show(error.response.data.status);
+                  if (!error.response.data.code) {
+                    setAuthModal(true);
+                    setLoginAction((prevreport) => {
+                      return {
+                        ...prevreport,
+                        func: fetchReportByIdApi,
+                        params: id,
+                      };
+                    });
+                  }
 
                   break;
                 default:

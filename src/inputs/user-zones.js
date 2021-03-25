@@ -15,7 +15,7 @@ const UserZone = (props) => {
           return formik.handleChange(e);
         }}
         onBlur={formik.handleBlur}
-        value={formik.values.zone_id}
+        value={formik.values.zone_id > 0 ? formik.values.zone_id : ""}
         className="form-control"
         name={name}
       >

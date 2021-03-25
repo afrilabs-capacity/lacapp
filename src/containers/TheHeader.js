@@ -69,9 +69,7 @@ const TheHeader = () => {
         </CHeaderNavItem>
         <CHeaderNavItem className="px-3">
           Welcome back,{" "}
-          <b className="btn-site-theme">
-            {user ? ` ${user.name.split(" ")[0]}` : ""}
-          </b>
+          <b className="btn-site-theme">{user ? ` ${user.name}` : ""}</b>
         </CHeaderNavItem>
       </CHeaderNav>
 

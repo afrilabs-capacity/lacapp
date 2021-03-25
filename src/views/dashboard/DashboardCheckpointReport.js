@@ -91,10 +91,7 @@ const DashboardCheckpointReport = () => {
                     <button
                       className="btn  px-4 btn-site-theme-bg w-60 m-2 shadow"
                       disabled={apiAction}
-                      onClick={
-                        () => null
-                        //setAddUserFormActive((prev) => (prev = !prev))
-                      }
+                      onClick={() => history.push("/reports/daily")}
                     >
                       Daily Report
                     </button>
@@ -102,10 +99,7 @@ const DashboardCheckpointReport = () => {
                     <button
                       className="btn  px-4 btn-site-theme-bg w-60 m-2 shadow"
                       disabled={apiAction}
-                      onClick={
-                        () => null
-                        //setAddUserFormActive((prev) => (prev = !prev))
-                      }
+                      onClick={() => history.push("/reports/pdss")}
                     >
                       PDSS Report
                     </button>
